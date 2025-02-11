@@ -25,12 +25,17 @@ struct DataScannerView: UIViewControllerRepresentable {
             isGuidanceEnabled: true,
             isHighlightingEnabled: true
         )
+        vc.delegate = context.coordinator
         return vc
     }
     
     func updateUIViewController(_ uiViewController: DataScannerViewController, context: Context) {
-        uiViewController.delegate = context.coordinator
-        try? uiViewController.startScanning()
+        // Only start scanning if not already scanning
+        if !uiViewController.isScanning {
+            try? uiViewController.startScanning()
+        }
+        
+        // Handle photo capture
         if shouldCapturePhoto {
             capturePhoto(dataScannerVC: uiViewController)
         }
@@ -39,8 +44,10 @@ struct DataScannerView: UIViewControllerRepresentable {
     private func capturePhoto(dataScannerVC: DataScannerViewController) {
         Task { @MainActor in
             do {
+                dataScannerVC.stopScanning()  // Stop scanning before capture
                 let photo = try await dataScannerVC.capturePhoto()
                 self.capturedPhoto = .init(image: photo)
+                try? dataScannerVC.startScanning()  // Resume scanning after capture
             } catch {
                 print(error.localizedDescription)
             }
@@ -53,7 +60,9 @@ struct DataScannerView: UIViewControllerRepresentable {
     }
     
     static func dismantleUIViewController(_ uiViewController: DataScannerViewController, coordinator: Coordinator) {
-        uiViewController.stopScanning()
+        if uiViewController.isScanning {
+            uiViewController.stopScanning()
+        }
     }
     
     

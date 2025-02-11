@@ -56,19 +56,8 @@ struct ContentView: View {
                     controller.view.backgroundColor = .clear
                 }
                 .sheet(item: $vm.capturedPhoto) { photo in
-                    ZStack(alignment: .topTrailing) {
-                        LiveTextView(image: photo.image)
-                        Button {
-                            vm.capturedPhoto = nil
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .imageScale(.large)
-                        }
-                        .foregroundColor(.white)
-                        .padding([.trailing, .top])
-
-                    }
-                    .edgesIgnoringSafeArea(.bottom)
+                    LiveTextContainerView(image: photo.image)
+                        .edgesIgnoringSafeArea(.bottom)
                 }
         }
         .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }

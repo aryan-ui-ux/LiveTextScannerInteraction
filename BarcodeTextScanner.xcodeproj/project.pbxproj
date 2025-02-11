@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17D6735D2D5B625000D70F99 /* MyDatabase.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17D6735B2D5B625000D70F99 /* MyDatabase.xcdatamodeld */; };
+		17D6735F2D5B626500D70F99 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D6735E2D5B626500D70F99 /* CoreData.swift */; };
 		8BD2BB1D2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2BB1C2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift */; };
 		8BD2BB1F2866B91F00DFA8C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2BB1E2866B91F00DFA8C1 /* ContentView.swift */; };
 		8BD2BB212866B92000DFA8C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BD2BB202866B92000DFA8C1 /* Assets.xcassets */; };
@@ -23,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17D6735C2D5B625000D70F99 /* MyDatabase.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyDatabase.xcdatamodel; sourceTree = "<group>"; };
+		17D6735E2D5B626500D70F99 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		8BD2BB192866B91F00DFA8C1 /* BarcodeTextScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BarcodeTextScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BD2BB1C2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeTextScannerApp.swift; sourceTree = "<group>"; };
 		8BD2BB1E2866B91F00DFA8C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,9 +85,11 @@
 			isa = PBXGroup;
 			children = (
 				8BD2BB1C2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift */,
+				17D6735B2D5B625000D70F99 /* MyDatabase.xcdatamodeld */,
 				8BD2BB2A2866B98000DFA8C1 /* AppViewModel.swift */,
 				8BF286A92881C6F30007D424 /* LiveTextView.swift */,
 				8BD2BB1E2866B91F00DFA8C1 /* ContentView.swift */,
+				17D6735E2D5B626500D70F99 /* CoreData.swift */,
 				8BD2BB2C2866CC3400DFA8C1 /* DataScannerView.swift */,
 				8BD2BB202866B92000DFA8C1 /* Assets.xcassets */,
 				8BD2BB222866B92000DFA8C1 /* Preview Content */,
@@ -221,9 +227,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17D6735D2D5B625000D70F99 /* MyDatabase.xcdatamodeld in Sources */,
 				8BD2BB1F2866B91F00DFA8C1 /* ContentView.swift in Sources */,
 				8BD2BB1D2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift in Sources */,
 				8BF286AA2881C6F30007D424 /* LiveTextView.swift in Sources */,
+				17D6735F2D5B626500D70F99 /* CoreData.swift in Sources */,
 				8BD2BB2B2866B98000DFA8C1 /* AppViewModel.swift in Sources */,
 				8BD2BB2D2866CC3400DFA8C1 /* DataScannerView.swift in Sources */,
 			);
@@ -365,7 +373,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BarcodeTextScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 5C2XD9H2JS;
+				DEVELOPMENT_TEAM = 356SSSLN49;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan barcode and text";
@@ -379,7 +387,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alfianlosari.BarcodeTextScanner3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aryan.BarcodeTextScanner3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -395,7 +403,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BarcodeTextScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 5C2XD9H2JS;
+				DEVELOPMENT_TEAM = 356SSSLN49;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan barcode and text";
@@ -409,7 +417,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alfianlosari.BarcodeTextScanner3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aryan.BarcodeTextScanner3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -508,6 +516,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		17D6735B2D5B625000D70F99 /* MyDatabase.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				17D6735C2D5B625000D70F99 /* MyDatabase.xcdatamodel */,
+			);
+			currentVersion = 17D6735C2D5B625000D70F99 /* MyDatabase.xcdatamodel */;
+			path = MyDatabase.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 8BD2BB112866B91F00DFA8C1 /* Project object */;
 }
