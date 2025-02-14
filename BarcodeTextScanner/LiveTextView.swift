@@ -9,21 +9,31 @@ import Foundation
 import SwiftUI
 import VisionKit
 import Vision
+import CoreData
+import Combine
 
-// Helper class for ingredient classification
-class IngredientClassifier {
+// Simple ingredient classifier
+final class IngredientClassifier: ObservableObject {
     static let shared = IngredientClassifier()
     
+    @Published private(set) var classifications: [String: String] = [:]
+    
+    private init() {}
+    
     func classifyIngredient(_ ingredient: String) -> String {
-        // Randomly return one of: "veg", "non-veg", "vegan", nil
-        let classifications = ["veg", "non-veg", "vegan", "unknown"]
-        return (classifications.randomElement())!
+        if let existing = classifications[ingredient] {
+            return existing
+        }
+        let possibleClassifications = ["veg", "non-veg", "vegan", "unknown"]
+        let classification = possibleClassifications.randomElement()!
+        classifications[ingredient] = classification
+        objectWillChange.send()
+        return classification
     }
 }
 
 @MainActor
 struct LiveTextView: UIViewRepresentable {
-     
     let image: UIImage
     @Binding var recognizedText: String
     @Binding var recognizedTokens: [String]
@@ -90,25 +100,26 @@ struct LiveTextContainerView: View {
     @State private var ingredientClassifications: [String: String] = [:]
     @State private var finalVerdict: String = ""
     @EnvironmentObject private var persistence: Persistence
+    @StateObject private var classifier = IngredientClassifier.shared
     
     private func classifyIngredients() {
-        let classifier = IngredientClassifier.shared
         ingredientClassifications = [:]
-        
-        for token in recognizedTokens {
-            ingredientClassifications[token] = classifier.classifyIngredient(token)
-        }
-        
-        // Calculate final verdict
-        let classifications = Set(ingredientClassifications.values)
-        if classifications.contains("non-veg") {
-            finalVerdict = "Non-Vegetarian"
-        } else if classifications.contains("veg") && !classifications.contains("vegan") {
-            finalVerdict = "Vegetarian"
-        } else if classifications.contains("vegan") {
-            finalVerdict = "Vegan"
-        } else {
-            finalVerdict = "Unknown"
+        Task { @MainActor in
+            for token in recognizedTokens {
+                ingredientClassifications[token] = classifier.classifyIngredient(token)
+            }
+            
+            // Calculate final verdict
+            let classifications = Set(ingredientClassifications.values)
+            if classifications.contains("non-veg") {
+                finalVerdict = "Non-Vegetarian"
+            } else if classifications.contains("veg") && !classifications.contains("vegan") {
+                finalVerdict = "Vegetarian"
+            } else if classifications.contains("vegan") {
+                finalVerdict = "Vegan"
+            } else {
+                finalVerdict = "Unknown"
+            }
         }
     }
     
