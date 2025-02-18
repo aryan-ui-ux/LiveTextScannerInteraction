@@ -28,7 +28,7 @@ final class AppViewModel: ObservableObject {
     
     @Published var dataScannerAccessStatus: DataScannerAccessStatusType = .notDetermined
     @Published var recognizedItems: [RecognizedItem] = []
-    @Published var scanType: ScanType = .barcode
+    @Published var scanType: ScanType = .text
     @Published var textContentType: DataScannerViewController.TextContentType?
     @Published var recognizesMultipleItems = true
     
@@ -48,7 +48,7 @@ final class AppViewModel: ObservableObject {
         }
     }
     
-      var dataScannerViewId: Int {
+    var dataScannerViewId: Int {
         var hasher = Hasher()
         hasher.combine(scanType)
         hasher.combine(recognizesMultipleItems)
@@ -69,25 +69,22 @@ final class AppViewModel: ObservableObject {
         }
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-            
-        case .authorized:
-            dataScannerAccessStatus = isScannerAvailable ? .scannerAvailable : .scannerNotAvailable
-            
-        case .restricted, .denied:
-            dataScannerAccessStatus = .cameraAccessNotGranted
-            
-        case .notDetermined:
-            let granted = await AVCaptureDevice.requestAccess(for: .video)
-            if granted {
+            case .authorized:
                 dataScannerAccessStatus = isScannerAvailable ? .scannerAvailable : .scannerNotAvailable
-            } else {
+                
+            case .restricted, .denied:
                 dataScannerAccessStatus = .cameraAccessNotGranted
-            }
-        
-        default: break
-            
+                
+            case .notDetermined:
+                let granted = await AVCaptureDevice.requestAccess(for: .video)
+                if granted {
+                    dataScannerAccessStatus = isScannerAvailable ? .scannerAvailable : .scannerNotAvailable
+                } else {
+                    dataScannerAccessStatus = .cameraAccessNotGranted
+                }
+                
+            default:
+                break
         }
     }
-    
-    
 }

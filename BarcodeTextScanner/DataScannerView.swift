@@ -99,7 +99,7 @@ struct DataScannerView: UIViewControllerRepresentable {
     
 }
 
-struct IdentifiableImage: Identifiable {
+struct IdentifiableImage: Identifiable, Hashable {
     let id = UUID()
     let image: UIImage
 }

@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		17D6735D2D5B625000D70F99 /* MyDatabase.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17D6735B2D5B625000D70F99 /* MyDatabase.xcdatamodeld */; };
-		17D6735F2D5B626500D70F99 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D6735E2D5B626500D70F99 /* CoreData.swift */; };
 		8BD2BB1D2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2BB1C2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift */; };
 		8BD2BB1F2866B91F00DFA8C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2BB1E2866B91F00DFA8C1 /* ContentView.swift */; };
 		8BD2BB212866B92000DFA8C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BD2BB202866B92000DFA8C1 /* Assets.xcassets */; };
@@ -16,17 +14,16 @@
 		8BD2BB2B2866B98000DFA8C1 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2BB2A2866B98000DFA8C1 /* AppViewModel.swift */; };
 		8BD2BB2D2866CC3400DFA8C1 /* DataScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD2BB2C2866CC3400DFA8C1 /* DataScannerView.swift */; };
 		8BF286AA2881C6F30007D424 /* LiveTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF286A92881C6F30007D424 /* LiveTextView.swift */; };
-		8BF286B22881D3B90007D424 /* LiveTextMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF286B12881D3B90007D424 /* LiveTextMacApp.swift */; };
-		8BF286B42881D3B90007D424 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF286B32881D3B90007D424 /* ContentView.swift */; };
-		8BF286B62881D3BA0007D424 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BF286B52881D3BA0007D424 /* Assets.xcassets */; };
-		8BF286B92881D3BA0007D424 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BF286B82881D3BA0007D424 /* Preview Assets.xcassets */; };
-		8BF286BF2881D42F0007D424 /* LiveTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF286BE2881D42F0007D424 /* LiveTextView.swift */; };
-		8BF286C32881D6F70007D424 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF286C22881D6F70007D424 /* AppViewModel.swift */; };
+		BBE37B632D631A8E003DE846 /* PreferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE37B622D631A8E003DE846 /* PreferenceView.swift */; };
+		BBE37B652D631AA2003DE846 /* SafeBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE37B642D631AA2003DE846 /* SafeBackgroundView.swift */; };
+		BBE37B672D631AC7003DE846 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE37B662D631AC7003DE846 /* OnboardingView.swift */; };
+		BBE37B692D631D3D003DE846 /* SafeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE37B682D631D3D003DE846 /* SafeView.swift */; };
+		BBE37B6B2D631F89003DE846 /* NotSafeBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE37B6A2D631F89003DE846 /* NotSafeBackgroundView.swift */; };
+		BBE37B6D2D640780003DE846 /* Food.json in Resources */ = {isa = PBXBuildFile; fileRef = BBE37B6C2D640780003DE846 /* Food.json */; };
+		BBE37B6F2D6408A6003DE846 /* IngredientStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBE37B6E2D6408A6003DE846 /* IngredientStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		17D6735C2D5B625000D70F99 /* MyDatabase.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyDatabase.xcdatamodel; sourceTree = "<group>"; };
-		17D6735E2D5B626500D70F99 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		8BD2BB192866B91F00DFA8C1 /* BarcodeTextScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BarcodeTextScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BD2BB1C2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeTextScannerApp.swift; sourceTree = "<group>"; };
 		8BD2BB1E2866B91F00DFA8C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -35,25 +32,17 @@
 		8BD2BB2A2866B98000DFA8C1 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		8BD2BB2C2866CC3400DFA8C1 /* DataScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScannerView.swift; sourceTree = "<group>"; };
 		8BF286A92881C6F30007D424 /* LiveTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTextView.swift; sourceTree = "<group>"; };
-		8BF286AF2881D3B90007D424 /* LiveTextMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveTextMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8BF286B12881D3B90007D424 /* LiveTextMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTextMacApp.swift; sourceTree = "<group>"; };
-		8BF286B32881D3B90007D424 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		8BF286B52881D3BA0007D424 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8BF286B82881D3BA0007D424 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		8BF286BA2881D3BA0007D424 /* LiveTextMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LiveTextMac.entitlements; sourceTree = "<group>"; };
-		8BF286BE2881D42F0007D424 /* LiveTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTextView.swift; sourceTree = "<group>"; };
-		8BF286C22881D6F70007D424 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		BBE37B622D631A8E003DE846 /* PreferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceView.swift; sourceTree = "<group>"; };
+		BBE37B642D631AA2003DE846 /* SafeBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeBackgroundView.swift; sourceTree = "<group>"; };
+		BBE37B662D631AC7003DE846 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		BBE37B682D631D3D003DE846 /* SafeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeView.swift; sourceTree = "<group>"; };
+		BBE37B6A2D631F89003DE846 /* NotSafeBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotSafeBackgroundView.swift; sourceTree = "<group>"; };
+		BBE37B6C2D640780003DE846 /* Food.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Food.json; sourceTree = "<group>"; };
+		BBE37B6E2D6408A6003DE846 /* IngredientStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		8BD2BB162866B91F00DFA8C1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8BF286AC2881D3B90007D424 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -67,7 +56,6 @@
 			isa = PBXGroup;
 			children = (
 				8BD2BB1B2866B91F00DFA8C1 /* BarcodeTextScanner */,
-				8BF286B02881D3B90007D424 /* LiveTextMac */,
 				8BD2BB1A2866B91F00DFA8C1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -76,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				8BD2BB192866B91F00DFA8C1 /* BarcodeTextScanner.app */,
-				8BF286AF2881D3B90007D424 /* LiveTextMac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,11 +72,16 @@
 			isa = PBXGroup;
 			children = (
 				8BD2BB1C2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift */,
-				17D6735B2D5B625000D70F99 /* MyDatabase.xcdatamodeld */,
+				BBE37B6C2D640780003DE846 /* Food.json */,
+				BBE37B662D631AC7003DE846 /* OnboardingView.swift */,
+				BBE37B622D631A8E003DE846 /* PreferenceView.swift */,
+				BBE37B642D631AA2003DE846 /* SafeBackgroundView.swift */,
+				BBE37B6A2D631F89003DE846 /* NotSafeBackgroundView.swift */,
+				BBE37B682D631D3D003DE846 /* SafeView.swift */,
 				8BD2BB2A2866B98000DFA8C1 /* AppViewModel.swift */,
+				BBE37B6E2D6408A6003DE846 /* IngredientStore.swift */,
 				8BF286A92881C6F30007D424 /* LiveTextView.swift */,
 				8BD2BB1E2866B91F00DFA8C1 /* ContentView.swift */,
-				17D6735E2D5B626500D70F99 /* CoreData.swift */,
 				8BD2BB2C2866CC3400DFA8C1 /* DataScannerView.swift */,
 				8BD2BB202866B92000DFA8C1 /* Assets.xcassets */,
 				8BD2BB222866B92000DFA8C1 /* Preview Content */,
@@ -101,28 +93,6 @@
 			isa = PBXGroup;
 			children = (
 				8BD2BB232866B92000DFA8C1 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		8BF286B02881D3B90007D424 /* LiveTextMac */ = {
-			isa = PBXGroup;
-			children = (
-				8BF286B12881D3B90007D424 /* LiveTextMacApp.swift */,
-				8BF286B32881D3B90007D424 /* ContentView.swift */,
-				8BF286B52881D3BA0007D424 /* Assets.xcassets */,
-				8BF286BA2881D3BA0007D424 /* LiveTextMac.entitlements */,
-				8BF286B72881D3BA0007D424 /* Preview Content */,
-				8BF286BE2881D42F0007D424 /* LiveTextView.swift */,
-				8BF286C22881D6F70007D424 /* AppViewModel.swift */,
-			);
-			path = LiveTextMac;
-			sourceTree = "<group>";
-		};
-		8BF286B72881D3BA0007D424 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				8BF286B82881D3BA0007D424 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -147,23 +117,6 @@
 			productReference = 8BD2BB192866B91F00DFA8C1 /* BarcodeTextScanner.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8BF286AE2881D3B90007D424 /* LiveTextMac */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8BF286BB2881D3BA0007D424 /* Build configuration list for PBXNativeTarget "LiveTextMac" */;
-			buildPhases = (
-				8BF286AB2881D3B90007D424 /* Sources */,
-				8BF286AC2881D3B90007D424 /* Frameworks */,
-				8BF286AD2881D3B90007D424 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = LiveTextMac;
-			productName = LiveTextMac;
-			productReference = 8BF286AF2881D3B90007D424 /* LiveTextMac.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -172,12 +125,9 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					8BD2BB182866B91F00DFA8C1 = {
-						CreatedOnToolsVersion = 14.0;
-					};
-					8BF286AE2881D3B90007D424 = {
 						CreatedOnToolsVersion = 14.0;
 					};
 				};
@@ -196,7 +146,6 @@
 			projectRoot = "";
 			targets = (
 				8BD2BB182866B91F00DFA8C1 /* BarcodeTextScanner */,
-				8BF286AE2881D3B90007D424 /* LiveTextMac */,
 			);
 		};
 /* End PBXProject section */
@@ -207,16 +156,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BD2BB242866B92000DFA8C1 /* Preview Assets.xcassets in Resources */,
+				BBE37B6D2D640780003DE846 /* Food.json in Resources */,
 				8BD2BB212866B92000DFA8C1 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8BF286AD2881D3B90007D424 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8BF286B92881D3BA0007D424 /* Preview Assets.xcassets in Resources */,
-				8BF286B62881D3BA0007D424 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,24 +168,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17D6735D2D5B625000D70F99 /* MyDatabase.xcdatamodeld in Sources */,
+				BBE37B692D631D3D003DE846 /* SafeView.swift in Sources */,
+				BBE37B632D631A8E003DE846 /* PreferenceView.swift in Sources */,
 				8BD2BB1F2866B91F00DFA8C1 /* ContentView.swift in Sources */,
+				BBE37B672D631AC7003DE846 /* OnboardingView.swift in Sources */,
 				8BD2BB1D2866B91F00DFA8C1 /* BarcodeTextScannerApp.swift in Sources */,
 				8BF286AA2881C6F30007D424 /* LiveTextView.swift in Sources */,
-				17D6735F2D5B626500D70F99 /* CoreData.swift in Sources */,
+				BBE37B6B2D631F89003DE846 /* NotSafeBackgroundView.swift in Sources */,
+				BBE37B6F2D6408A6003DE846 /* IngredientStore.swift in Sources */,
 				8BD2BB2B2866B98000DFA8C1 /* AppViewModel.swift in Sources */,
+				BBE37B652D631AA2003DE846 /* SafeBackgroundView.swift in Sources */,
 				8BD2BB2D2866CC3400DFA8C1 /* DataScannerView.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8BF286AB2881D3B90007D424 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8BF286B42881D3B90007D424 /* ContentView.swift in Sources */,
-				8BF286BF2881D42F0007D424 /* LiveTextView.swift in Sources */,
-				8BF286C32881D6F70007D424 /* AppViewModel.swift in Sources */,
-				8BF286B22881D3B90007D424 /* LiveTextMacApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +189,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -287,6 +222,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -315,6 +251,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -347,6 +284,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -370,10 +308,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BarcodeTextScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 356SSSLN49;
+				DEVELOPMENT_TEAM = 6B89WP5H2R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan barcode and text";
@@ -382,13 +321,15 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.aryan.BarcodeTextScanner3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.myc.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -400,10 +341,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BarcodeTextScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 356SSSLN49;
+				DEVELOPMENT_TEAM = 6B89WP5H2R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan barcode and text";
@@ -412,76 +354,18 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.aryan.BarcodeTextScanner3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.myc.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		8BF286BC2881D3BA0007D424 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_ENTITLEMENTS = LiveTextMac/LiveTextMac.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"LiveTextMac/Preview Content\"";
-				DEVELOPMENT_TEAM = 5C2XD9H2JS;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alfianlosari.LiveTextMac;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		8BF286BD2881D3BA0007D424 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_ENTITLEMENTS = LiveTextMac/LiveTextMac.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"LiveTextMac/Preview Content\"";
-				DEVELOPMENT_TEAM = 5C2XD9H2JS;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alfianlosari.LiveTextMac;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -506,29 +390,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8BF286BB2881D3BA0007D424 /* Build configuration list for PBXNativeTarget "LiveTextMac" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8BF286BC2881D3BA0007D424 /* Debug */,
-				8BF286BD2881D3BA0007D424 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		17D6735B2D5B625000D70F99 /* MyDatabase.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				17D6735C2D5B625000D70F99 /* MyDatabase.xcdatamodel */,
-			);
-			currentVersion = 17D6735C2D5B625000D70F99 /* MyDatabase.xcdatamodel */;
-			path = MyDatabase.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 8BD2BB112866B91F00DFA8C1 /* Project object */;
 }
