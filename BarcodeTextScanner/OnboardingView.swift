@@ -6,6 +6,43 @@
 //
 
 import SwiftUI
+import Lottie
+
+struct LottieView: UIViewRepresentable {
+    let animationName: String
+    let loopMode: LottieLoopMode
+    let contentMode: UIView.ContentMode
+    
+    init(name: String, loopMode: LottieLoopMode = .loop, contentMode: UIView.ContentMode = .scaleAspectFit) {
+        self.animationName = name
+        self.loopMode = loopMode
+        self.contentMode = contentMode
+    }
+    
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView(frame: .zero)
+        let animationView = LottieAnimationView()
+        
+        if let animation = LottieAnimation.named(animationName) {
+            animationView.animation = animation
+            animationView.contentMode = contentMode
+            animationView.loopMode = loopMode
+            animationView.play()
+            
+            animationView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(animationView)
+            
+            NSLayoutConstraint.activate([
+                animationView.widthAnchor.constraint(equalTo: view.widthAnchor),
+                animationView.heightAnchor.constraint(equalTo: view.heightAnchor)
+            ])
+        }
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {}
+}
 
 struct OnboardingView: View {
     var body: some View {
@@ -15,7 +52,7 @@ struct OnboardingView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    Rectangle()
+                    LottieView(name: "Onboarding (Safe)")
                         .aspectRatio(18/29, contentMode: .fit)
                     
                     Spacer()
@@ -23,6 +60,7 @@ struct OnboardingView: View {
                     Text("Scan food labels instantly and check if they're safe for you")
                         .font(.title3)
                         .multilineTextAlignment(.center)
+                        .foregroundStyle(.white)
                     
                     NavigationLink {
                         PreferenceView()
