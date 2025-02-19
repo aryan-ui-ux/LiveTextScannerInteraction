@@ -22,36 +22,46 @@ struct SafeView: View {
     
     @Environment(\.dismiss) var dismiss
     let preference: Preference
-    @State var whitelistedIngredients: [Ingredient] = []
-    @State var blacklistedIngredients: [Ingredient] = []
-    @State var veganIngredients: [Ingredient] = []
-    @State var nonVeganIngredients: [Ingredient] = []
-    @State var unclassifiedIngredients: [Ingredient] = []
+    let ingredients: [String]
+    let classifiedIngredients: (
+        whitelisted: [Ingredient],
+        blacklisted: [Ingredient],
+        vegan: [Ingredient],
+        nonVegan: [Ingredient],
+        unclassified: [Ingredient]
+    )
     @State var isSafe: Bool?
     @State var showDetailView: Bool = false
     
-    let ingredients: [String]
-    
-    init(ingredients: [String]) {
+    init(
+        ingredients: [String],
+        classifiedIngredients: (
+            whitelisted: [Ingredient],
+            blacklisted: [Ingredient],
+            vegan: [Ingredient],
+            nonVegan: [Ingredient],
+            unclassified: [Ingredient]
+        )
+    ) {
         self.preference = .init(rawValue: UserDefaults.standard.string(forKey: "preference") ?? "") ?? .vegan
         self.ingredients = ingredients
-    }
-    
-    private func determineIfSafe() -> Bool {
-        let hasAnimalIngredients = !nonVeganIngredients.filter { $0.ingredientType == .animal }.isEmpty
-        let hasPescatarianIngredients = !nonVeganIngredients.filter { $0.ingredientType == .pescatarian }.isEmpty
-        let hasEggIngredients = !nonVeganIngredients.filter { $0.ingredientType == .eggetarian }.isEmpty
-        let hasDairyIngredients = !nonVeganIngredients.filter { $0.ingredientType == .vegetarian }.isEmpty
+        self.classifiedIngredients = classifiedIngredients
+        
+        // Determine if safe immediately
+        let hasAnimalIngredients = !classifiedIngredients.nonVegan.filter { $0.ingredientType == .animal }.isEmpty
+        let hasPescatarianIngredients = !classifiedIngredients.nonVegan.filter { $0.ingredientType == .pescatarian }.isEmpty
+        let hasEggIngredients = !classifiedIngredients.nonVegan.filter { $0.ingredientType == .eggetarian }.isEmpty
+        let hasDairyIngredients = !classifiedIngredients.nonVegan.filter { $0.ingredientType == .vegetarian }.isEmpty
         
         switch preference {
         case .vegan:
-            return !hasAnimalIngredients && !hasPescatarianIngredients && !hasEggIngredients && !hasDairyIngredients
+            _isSafe = State(initialValue: !hasAnimalIngredients && !hasPescatarianIngredients && !hasEggIngredients && !hasDairyIngredients)
         case .vegetarian:
-            return !hasAnimalIngredients && !hasPescatarianIngredients
+            _isSafe = State(initialValue: !hasAnimalIngredients && !hasPescatarianIngredients)
         case .eggetarian:
-            return !hasAnimalIngredients && !hasPescatarianIngredients
+            _isSafe = State(initialValue: !hasAnimalIngredients && !hasPescatarianIngredients)
         case .pescatorian:
-            return !hasAnimalIngredients && !hasEggIngredients
+            _isSafe = State(initialValue: !hasAnimalIngredients && !hasEggIngredients)
         }
     }
     
@@ -74,8 +84,8 @@ struct SafeView: View {
                             .scaledToFill()
                             .frame(height: 271)
                         
-                        let hasAnimalIngredients = !nonVeganIngredients.filter { $0.ingredientType == .animal }.isEmpty
-                        let hasEggIngredients = !nonVeganIngredients.filter { $0.ingredientType == .eggetarian }.isEmpty
+                        let hasAnimalIngredients = !classifiedIngredients.nonVegan.filter { $0.ingredientType == .animal }.isEmpty
+                        let hasEggIngredients = !classifiedIngredients.nonVegan.filter { $0.ingredientType == .eggetarian }.isEmpty
                         
                         Text(isSafe ? "Suitable for \(preference.title)" : 
                              hasAnimalIngredients ? "Contains Animal Ingredients" : 
@@ -85,108 +95,100 @@ struct SafeView: View {
                             .fontWeight(.semibold)
                             .fontDesign(.rounded)
                         
-                        if !nonVeganIngredients.isEmpty {
-                            let animalIngredients = nonVeganIngredients.filter { $0.ingredientType == .animal }
-                            let vegetarianIngredients = nonVeganIngredients.filter { $0.ingredientType == .vegetarian }
-                            let pescatarianIngredients = nonVeganIngredients.filter { $0.ingredientType == .pescatarian }
-                            let eggetarianIngredients = nonVeganIngredients.filter { $0.ingredientType == .eggetarian }
+                        if !classifiedIngredients.nonVegan.isEmpty {
+                            let animalIngredients = classifiedIngredients.nonVegan.filter { $0.ingredientType == .animal }
+                            let vegetarianIngredients = classifiedIngredients.nonVegan.filter { $0.ingredientType == .vegetarian }
+                            let pescatarianIngredients = classifiedIngredients.nonVegan.filter { $0.ingredientType == .pescatarian }
+                            let eggetarianIngredients = classifiedIngredients.nonVegan.filter { $0.ingredientType == .eggetarian }
                             
-                            if !animalIngredients.isEmpty {
-                                Text("Contains Animal Products: " + ListFormatter.localizedString(byJoining: animalIngredients.map { $0.name }))
-                                    .font(.body)
-                                    .fontDesign(.rounded)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.center)
+                            VStack(spacing: 8) {
+                                if !animalIngredients.isEmpty {
+                                    Text("Contains Animal Products: " + ListFormatter.localizedString(byJoining: animalIngredients.map { $0.name }))
+                                        .font(.body)
+                                        .fontDesign(.rounded)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                }
+                                
+                                if !vegetarianIngredients.isEmpty {
+                                    Text("Contains Dairy Products: " + ListFormatter.localizedString(byJoining: vegetarianIngredients.map { $0.name }))
+                                        .font(.body)
+                                        .fontDesign(.rounded)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                }
+                                
+                                if !pescatarianIngredients.isEmpty {
+                                    Text("Contains Fish/Seafood: " + ListFormatter.localizedString(byJoining: pescatarianIngredients.map { $0.name }))
+                                        .font(.body)
+                                        .fontDesign(.rounded)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                }
+                                
+                                if !eggetarianIngredients.isEmpty {
+                                    Text("Contains Egg Products: " + ListFormatter.localizedString(byJoining: eggetarianIngredients.map { $0.name }))
+                                        .font(.body)
+                                        .fontDesign(.rounded)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                }
                             }
-                            
-                            if !pescatarianIngredients.isEmpty {
-                                Text("Contains Seafood: " + ListFormatter.localizedString(byJoining: pescatarianIngredients.map { $0.name }))
-                                    .font(.body)
-                                    .fontDesign(.rounded)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                            
-                            if !eggetarianIngredients.isEmpty {
-                                Text("Contains Eggs: " + ListFormatter.localizedString(byJoining: eggetarianIngredients.map { $0.name }))
-                                    .font(.body)
-                                    .fontDesign(.rounded)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                            
-                            if !vegetarianIngredients.isEmpty {
-                                Text("Contains Dairy: " + ListFormatter.localizedString(byJoining: vegetarianIngredients.map { $0.name }))
-                                    .font(.body)
-                                    .fontDesign(.rounded)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
+                            .padding(.horizontal)
                         }
                         
-                        if !unclassifiedIngredients.isEmpty {
-                            Text("⚠️ Contains unclassified ingredients")
-                                .foregroundColor(.orange)
+                        if !classifiedIngredients.unclassified.isEmpty {
+                            Text("Unclassified Ingredients: " + ListFormatter.localizedString(byJoining: classifiedIngredients.unclassified.map { $0.name }))
+                                .font(.body)
+                                .fontDesign(.rounded)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
                                 .padding(.horizontal)
-                                .padding(.top, 8)
                         }
                     }
                     
                     Spacer()
                     
-                    HStack {
+                    HStack(spacing: 16) {
                         Button {
                             showDetailView = true
                         } label: {
-                            Circle()
-                                .frame(height: 50)
-                                .aspectRatio(1, contentMode: .fit)
-                                .foregroundStyle(Color.black.opacity(0.1))
-                                .overlay {
-                                    Image(systemName: "list.bullet.rectangle.portrait")
-                                        .font(.headline)
-                                        .foregroundStyle(.white)
-                                }
+                            Image(systemName: "list.bullet.rectangle.portrait")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .fontDesign(.rounded)
+                                .foregroundStyle(.white)
+                                .frame(width: 50, height: 50)
+                                .background(Color.accentColor.opacity(0.3))
+                                .clipShape(.circle)
                         }
-                        
+
                         Button {
                             dismiss()
                         } label: {
-                            Text("Scan again")
-                                .font(.headline)
-                                .foregroundStyle(.black)
+                            Text("Scan Again")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .fontDesign(.rounded)
+                                .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(Color.white)
-                                .clipShape(Capsule())
+                                .padding(.vertical, 16)
+                                .background(Color.accentColor)
+                                .clipShape(.rect(cornerRadius: 12))
                         }
                     }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
                 }
-                .padding()
             }
-        }
-        .onAppear {
-            let result = IngredientStore.shared.getIngredients(
-                from: ingredients,
-                for: preference
-            )
-            
-            whitelistedIngredients = result.whitelisted
-            blacklistedIngredients = result.blacklisted
-            veganIngredients = result.vegan
-            nonVeganIngredients = result.nonVegan
-            unclassifiedIngredients = result.unclassified
-            
-            // Determine safety using the new function
-            isSafe = determineIfSafe()
         }
         .sheet(isPresented: $showDetailView) {
             IngredientsListView(
-                whitelistedIngredients: $whitelistedIngredients,
-                blacklistedIngredients: $blacklistedIngredients,
-                veganIngredients: $veganIngredients,
-                nonVeganIngredients: $nonVeganIngredients,
-                unclassifiedIngredients: $unclassifiedIngredients
+                whitelistedIngredients: .constant(classifiedIngredients.whitelisted),
+                blacklistedIngredients: .constant(classifiedIngredients.blacklisted),
+                veganIngredients: .constant(classifiedIngredients.vegan),
+                nonVeganIngredients: .constant(classifiedIngredients.nonVegan),
+                unclassifiedIngredients: .constant(classifiedIngredients.unclassified)
             )
             .environment(\.preference, preference)
             .environment(\.colorScheme, .dark)
@@ -398,3 +400,4 @@ struct IngredientSection: View {
         }
     }
 }
+

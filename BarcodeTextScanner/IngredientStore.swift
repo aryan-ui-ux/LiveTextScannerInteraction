@@ -733,6 +733,11 @@ class IngredientStore {
             "Pulses",
             "Coffee and coffee products"
         ]
+
+        // Define vegetarian food groups
+        let vegetarianFoodGroups = [
+            "Milk and milk products"
+        ]
         
         // Define non-vegetarian food groups
         let nonVegFoodGroups = [
@@ -751,98 +756,98 @@ class IngredientStore {
             let cleanedItem = item.trimmingCharacters(in: .whitespacesAndNewlines)
             let lowercasedItem = cleanedItem.lowercased()
             
+            print("\n--- Processing item: \(cleanedItem) ---")
+            
             // Skip if we've already processed this item
             guard !processedItems.contains(lowercasedItem) else {
+                print("⏭️ Skipping duplicate item: \(cleanedItem)")
                 return
             }
             processedItems.insert(lowercasedItem)
             
-            if let index = map[lowercasedItem] ?? map[singularizeWord(lowercasedItem)] {
-                var ingredient = ingredients[index]
-                
-                // First check if the ingredient belongs to a non-veg food group
-                if let foodGroup = ingredient.foodGroup,
-                   nonVegFoodGroups.contains(foodGroup) {
-                    ingredient.ingredientType = .animal
-                }
-                // Then check if it belongs to a pescatarian food group
-                else if let foodGroup = ingredient.foodGroup,
-                        pescatarianFoodGroups.contains(foodGroup) {
-                    ingredient.ingredientType = .pescatarian
-                }
-                // Then check if it belongs to a vegan food group
-                else if let foodGroup = ingredient.foodGroup,
-                        veganFoodGroups.contains(foodGroup) {
-                    ingredient.ingredientType = .vegan
-                } else {
-                    ingredient.ingredientType = classifyIngredient(cleanedItem)
-                }
-                
-                // Classify based on ingredient type and user preference
-                if let type = ingredient.ingredientType {
-                    switch (type, preference) {
-                    case (.vegan, _):
-                        vegan.append(ingredient)
-                        
-                    case (.vegetarian, .vegan):
-                        nonVegan.append(ingredient)
-                        
-                    case (.vegetarian, _):
-                        vegan.append(ingredient)
-                        
-                    case (.animal, _):
-                        nonVegan.append(ingredient)
-                        
-                    case (.eggetarian, .eggetarian):
-                        vegan.append(ingredient)
-                        
-                    case (.eggetarian, _):
-                        nonVegan.append(ingredient)
-                        
-                    case (.pescatarian, .pescatorian):
-                        vegan.append(ingredient)
-                        
-                    case (.pescatarian, _):
-                        nonVegan.append(ingredient)
-                        
-                    case (.both, _):
-                        nonVegan.append(ingredient)
+            // Try to classify using knownIngredients first
+            let formattedName = cleanedItem.lowercased()
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .replacingOccurrences(of: " ", with: "_")
+            
+            print("🔍 Searching for formatted name: \(formattedName)")
+            
+            var foundIngredient: Ingredient? = nil
+            
+            // Try exact match first
+            if let type = knownIngredients[formattedName] {
+                print("✅ Found exact match in knownIngredients")
+                foundIngredient = createIngredient(from: cleanedItem, type: type)
+            }
+            // Try case-insensitive match
+            else if let (_, type) = knownIngredients.first(where: { $0.key.lowercased() == formattedName.lowercased() }) {
+                print("✅ Found case-insensitive match in knownIngredients")
+                foundIngredient = createIngredient(from: cleanedItem, type: type)
+            }
+            // Try partial match
+            else if let (_, type) = knownIngredients.first(where: { 
+                $0.key.lowercased().contains(formattedName.lowercased()) || 
+                formattedName.lowercased().contains($0.key.lowercased())
+            }) {
+                print("✅ Found partial match in knownIngredients")
+                foundIngredient = createIngredient(from: cleanedItem, type: type)
+            }
+            
+            if let ingredient = foundIngredient {
+                classifyIngredient(ingredient, preference: preference, vegan: &vegan, nonVegan: &nonVegan)
+            }
+            // If not found in knownIngredients, try the ingredient database
+            else {
+                print("🔍 Searching in ingredient database")
+                if let index = map[lowercasedItem] ?? map[singularizeWord(lowercasedItem)] {
+                    var ingredient = ingredients[index]
+                    print("✅ Found in ingredient database")
+                    
+                    // Classify based on food group if ingredient type is not set
+                    if ingredient.ingredientType == nil, let foodGroup = ingredient.foodGroup {
+                        if nonVegFoodGroups.contains(foodGroup) {
+                            print("🏷️ Classified as animal based on food group")
+                            ingredient.ingredientType = .animal
+                        }
+                        else if vegetarianFoodGroups.contains(foodGroup) {
+                            print("🏷️ Classified as vegetarian based on food group")
+                            ingredient.ingredientType = .vegetarian
+                        }
+                        else if pescatarianFoodGroups.contains(foodGroup) {
+                            print("🏷️ Classified as pescatarian based on food group")
+                            ingredient.ingredientType = .pescatarian
+                        }
+                        else if veganFoodGroups.contains(foodGroup) {
+                            print("🏷️ Classified as vegan based on food group")
+                            ingredient.ingredientType = .vegan
+                        }
+                        else {
+                            print("⚠️ Food group not recognized, defaulting to .both")
+                            ingredient.ingredientType = .both
+                        }
                     }
+                    
+                    classifyIngredient(ingredient, preference: preference, vegan: &vegan, nonVegan: &nonVegan)
                 } else {
-                    unclassified.append(ingredient)
+                    // Skip common non-ingredient text patterns
+                    let skipPatterns = [
+                        "www", "com", "alamy", "image", "id",
+                        "suitable", "vegetarian", "vegan",
+                        "eet", "ohh", "rgot", "sar",
+                        "ingredients", "contains", "may contain",
+                        "manufactured", "produced", "packed",
+                        "best before", "use by"
+                    ]
+                    
+                    if skipPatterns.contains(where: { lowercasedItem.contains($0) }) {
+                        print("⏭️ Skipping non-ingredient text: \(cleanedItem)")
+                        return
+                    }
+                    
+                    print("❌ Not found in database, marking as unclassified")
+                    let unclassifiedIngredient = createIngredient(from: cleanedItem, type: nil)
+                    unclassified.append(unclassifiedIngredient)
                 }
-            } else {
-                // Skip common non-ingredient text patterns
-                let skipPatterns = [
-                    "www", "com", "alamy", "image", "id",
-                    "suitable", "vegetarian", "vegan",
-                    "eet", "ohh", "rgot", "sar",
-                    "ingredients", "contains", "may contain",
-                    "manufactured", "produced", "packed",
-                    "best before", "use by"
-                ]
-                
-                if skipPatterns.contains(where: { lowercasedItem.contains($0) }) {
-                    return
-                }
-                
-                // Create unclassified ingredient
-                let unclassifiedIngredient = Ingredient(
-                    id: -Int.random(in: 1...999999),
-                    name: cleanedItem.capitalized,
-                    nameScientific: nil,
-                    description: nil,
-                    itisId: nil,
-                    wikipediaId: nil,
-                    foodGroup: nil,
-                    foodSubgroup: nil,
-                    foodType: "unknown",
-                    category: nil,
-                    ncbiTaxonomyId: nil,
-                    publicId: "unclassified_\(UUID().uuidString)",
-                    ingredientType: nil
-                )
-                unclassified.append(unclassifiedIngredient)
             }
         }
         
@@ -853,7 +858,72 @@ class IngredientStore {
         nonVegan = Array(NSOrderedSet(array: nonVegan).array as! [Ingredient])
         unclassified = Array(NSOrderedSet(array: unclassified).array as! [Ingredient])
         
+        print("\n=== Classification Summary ===")
+        print("Vegan: \(vegan.count)")
+        print("Non-vegan: \(nonVegan.count)")
+        print("Unclassified: \(unclassified.count)")
+        
         return (whitelisted, blacklisted, vegan, nonVegan, unclassified)
+    }
+    
+    private func createIngredient(from name: String, type: IngredientType?) -> Ingredient {
+        return Ingredient(
+            id: -Int.random(in: 1...999999),
+            name: name.capitalized,
+            nameScientific: nil,
+            description: nil,
+            itisId: nil,
+            wikipediaId: nil,
+            foodGroup: nil,
+            foodSubgroup: nil,
+            foodType: type?.rawValue ?? "unknown",
+            category: nil,
+            ncbiTaxonomyId: nil,
+            publicId: "generated_\(UUID().uuidString)",
+            ingredientType: type
+        )
+    }
+    
+    private func classifyIngredient(_ ingredient: Ingredient, preference: Preference, vegan: inout [Ingredient], nonVegan: inout [Ingredient]) {
+        if let type = ingredient.ingredientType {
+            switch (type, preference) {
+            case (.vegan, _):
+                print("➡️ Classified as vegan")
+                vegan.append(ingredient)
+                
+            case (.vegetarian, .vegan):
+                print("➡️ Classified as non-vegan (vegetarian but preference is vegan)")
+                nonVegan.append(ingredient)
+                
+            case (.vegetarian, _):
+                print("➡️ Classified as non-vegan (vegetarian)")
+                nonVegan.append(ingredient)
+                
+            case (.animal, _):
+                print("➡️ Classified as non-vegan (animal)")
+                nonVegan.append(ingredient)
+                
+            case (.eggetarian, .eggetarian):
+                print("➡️ Classified as vegan (eggetarian and preference is eggetarian)")
+                vegan.append(ingredient)
+                
+            case (.eggetarian, _):
+                print("➡️ Classified as non-vegan (eggetarian)")
+                nonVegan.append(ingredient)
+                
+            case (.pescatarian, .pescatorian):
+                print("➡️ Classified as vegan (pescatarian and preference is pescatarian)")
+                vegan.append(ingredient)
+                
+            case (.pescatarian, _):
+                print("➡️ Classified as non-vegan (pescatarian)")
+                nonVegan.append(ingredient)
+                
+            case (.both, _):
+                print("➡️ Classified as non-vegan (both)")
+                nonVegan.append(ingredient)
+            }
+        }
     }
     
     func singularizeWord(_ word: String) -> String {
