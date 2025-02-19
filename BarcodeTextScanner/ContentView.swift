@@ -52,11 +52,18 @@ struct ContentView: View {
                 ZStack {
                     Circle()
                         .fill(.clear)
-                        .strokeBorder(Color.white, lineWidth: 2.5)
+                        .strokeBorder(Color.white, lineWidth: 3.5)
                     
                     Circle()
-                        .foregroundStyle(.white)
-                        .padding(5)
+                        .foregroundStyle(
+                            .radialGradient(
+                                colors: [.white, Color(white: 0.5)],
+                                center: .center,
+                                startRadius: -10,
+                                endRadius: 35
+                            )
+                        )
+                        .padding(8)
                 }
                 .frame(width: 70, height: 70)
             }
