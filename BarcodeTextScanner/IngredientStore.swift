@@ -105,7 +105,6 @@ class IngredientStore {
         "castor_oil": .vegan,
         "catalase": .both,
         "catgut": .animal,
-        "caviar": .animal,
         "cellulose": .vegan,
         "cetyl_alcohol": .both,
         "cetyl_palmitate": .both,
@@ -278,7 +277,6 @@ class IngredientStore {
         "reticulin": .animal,
         "riboflavin": .both,
         "riboflavin_5_phosphate": .both,
-        "roe": .animal,
         "royal_jelly": .animal,
         "sable": .animal,
         "salicylic_acid": .vegan,
@@ -427,7 +425,6 @@ class IngredientStore {
         "nori": .vegan,
         "wakame": .vegan,
         "kelp": .vegan,
-        "lamb": .animal,
         "veal": .animal,
         "goat": .animal,
         "duck": .animal,
@@ -549,7 +546,89 @@ class IngredientStore {
         "pickled_vegetables": .vegan,
         "fermented_foods": .vegan,
         "night_harvested_vegetables": .vegan,
-        "night_picked_vegetables": .vegan
+        "night_picked_vegetables": .vegan,
+        "tilapia": .pescatarian,
+        "sea_bass": .pescatarian,
+        "trout": .pescatarian,
+        "swordfish": .pescatarian,
+        "mahi_mahi": .pescatarian,
+        "flounder": .pescatarian,
+        "haddock": .pescatarian,
+        "perch": .pescatarian,
+        "grouper": .pescatarian,
+        "snapper": .pescatarian,
+        "catfish": .pescatarian,
+        "herring": .pescatarian,
+        "pollock": .pescatarian,
+        "sole": .pescatarian,
+        "barramundi": .pescatarian,
+        "monkfish": .pescatarian,
+        "caviar": .pescatarian,
+        "roe": .pescatarian,
+        "fish_eggs": .pescatarian,
+        "fish_paste": .pescatarian,
+        "fish_stock": .pescatarian,
+        "fish_oil": .pescatarian,
+        "omega_3": .pescatarian,
+        "krill_oil": .pescatarian,
+        "bonito_flakes": .pescatarian,
+        "dashi_stock": .pescatarian,
+        "surimi": .pescatarian,
+        "crab_stick": .pescatarian,
+        "fish_cake": .pescatarian,
+        "kamaboko": .pescatarian,
+        "sea_urchin": .pescatarian,
+        "uni": .pescatarian,
+        "abalone": .pescatarian,
+        "conch": .pescatarian,
+        "whelk": .pescatarian,
+        "cockle": .pescatarian,
+        "periwinkle": .pescatarian,
+        "sea_cucumber": .pescatarian,
+        "jellyfish": .pescatarian,
+        "cuttlefish": .pescatarian,
+        "calamari": .pescatarian,
+        "crawfish": .pescatarian,
+        "crayfish": .pescatarian,
+        "langoustine": .pescatarian,
+        "scampi": .pescatarian,
+        "soft_shell_crab": .pescatarian,
+        "dungeness_crab": .pescatarian,
+        "king_crab": .pescatarian,
+        "snow_crab": .pescatarian,
+        "blue_crab": .pescatarian,
+        "stone_crab": .pescatarian,
+        "tiger_prawn": .pescatarian,
+        "black_tiger_shrimp": .pescatarian,
+        "white_shrimp": .pescatarian,
+        "pink_shrimp": .pescatarian,
+        "bay_scallop": .pescatarian,
+        "sea_scallop": .pescatarian,
+        "blue_mussel": .pescatarian,
+        "green_mussel": .pescatarian,
+        "razor_clam": .pescatarian,
+        "manila_clam": .pescatarian,
+        "littleneck_clam": .pescatarian,
+        "geoduck": .pescatarian,
+        "pacific_oyster": .pescatarian,
+        "kumamoto_oyster": .pescatarian,
+        "european_oyster": .pescatarian,
+        "atlantic_salmon": .pescatarian,
+        "pacific_salmon": .pescatarian,
+        "coho_salmon": .pescatarian,
+        "sockeye_salmon": .pescatarian,
+        "king_salmon": .pescatarian,
+        "chum_salmon": .pescatarian,
+        "pink_salmon": .pescatarian,
+        "smoked_salmon": .pescatarian,
+        "lox": .pescatarian,
+        "gravlax": .pescatarian,
+        "yellowfin_tuna": .pescatarian,
+        "bluefin_tuna": .pescatarian,
+        "albacore_tuna": .pescatarian,
+        "skipjack_tuna": .pescatarian,
+        "ahi_tuna": .pescatarian,
+        "lamb": .animal
     ]
     
     init() {
@@ -588,6 +667,13 @@ class IngredientStore {
         print("\n=== Attempting to classify ingredient: \(name) ===")
         print("Formatted name: \(formattedName)")
         
+        // Check for common animal-derived ingredients that might be misclassified
+        let animalDerived = ["gelatin", "gelatine", "gel", "animal_gelatin", "bovine_gelatin", "porcine_gelatin"]
+        if animalDerived.contains(formattedName) {
+            print("✅ Found animal-derived ingredient: \(formattedName)")
+            return .animal
+        }
+        
         // First try exact match with formatted name
         if let type = knownIngredients[formattedName] {
             print("✅ Found exact match for ingredient: \(formattedName)")
@@ -614,8 +700,8 @@ class IngredientStore {
         }
         print("❌ No partial match found for: \(formattedName)")
         
-        print("⚠️ No matches found - defaulting to .vegetarian for: \(formattedName)")
-        return .vegetarian // Default to vegetarian if unknown, instead of .both
+        print("⚠️ No matches found - defaulting to .both for: \(formattedName)")
+        return .both // Default to .both for uncertain ingredients
     }
     
     func getIngredients(
@@ -650,7 +736,11 @@ class IngredientStore {
         
         // Define non-vegetarian food groups
         let nonVegFoodGroups = [
-            "Animal foods",
+            "Animal foods"
+        ]
+        
+        // Define pescatarian food groups
+        let pescatarianFoodGroups = [
             "Aquatic foods"
         ]
         
@@ -661,33 +751,30 @@ class IngredientStore {
             let cleanedItem = item.trimmingCharacters(in: .whitespacesAndNewlines)
             let lowercasedItem = cleanedItem.lowercased()
             
-            print("\n--- Processing item: \(cleanedItem) ---")
-            print("Lowercased: \(lowercasedItem)")
-            
             // Skip if we've already processed this item
             guard !processedItems.contains(lowercasedItem) else {
-                print("⏭️ Skipping duplicate item: \(lowercasedItem)")
                 return
             }
             processedItems.insert(lowercasedItem)
             
             if let index = map[lowercasedItem] ?? map[singularizeWord(lowercasedItem)] {
-                print("📍 Found in ingredient database: \(ingredients[index].name)")
                 var ingredient = ingredients[index]
                 
                 // First check if the ingredient belongs to a non-veg food group
                 if let foodGroup = ingredient.foodGroup,
                    nonVegFoodGroups.contains(foodGroup) {
-                    print("🍖 Ingredient belongs to non-vegetarian food group: \(foodGroup)")
                     ingredient.ingredientType = .animal
+                }
+                // Then check if it belongs to a pescatarian food group
+                else if let foodGroup = ingredient.foodGroup,
+                        pescatarianFoodGroups.contains(foodGroup) {
+                    ingredient.ingredientType = .pescatarian
                 }
                 // Then check if it belongs to a vegan food group
                 else if let foodGroup = ingredient.foodGroup,
                         veganFoodGroups.contains(foodGroup) {
-                    print("🌱 Ingredient belongs to vegan food group: \(foodGroup)")
                     ingredient.ingredientType = .vegan
                 } else {
-                    print("🔍 Classifying ingredient using known ingredients list")
                     ingredient.ingredientType = classifyIngredient(cleanedItem)
                 }
                 
@@ -695,72 +782,34 @@ class IngredientStore {
                 if let type = ingredient.ingredientType {
                     switch (type, preference) {
                     case (.vegan, _):
-                        // Vegan ingredients are safe for all preferences
-                        print("✅ Vegan ingredient - safe for all preferences")
                         vegan.append(ingredient)
                         
                     case (.vegetarian, .vegan):
-                        // Dairy is not safe for vegans
-                        print("🚫 Dairy ingredient - not safe for vegans")
                         nonVegan.append(ingredient)
                         
                     case (.vegetarian, _):
-                        // Dairy is safe for vegetarians and others
-                        print("✅ Dairy ingredient - safe for non-vegan preferences")
                         vegan.append(ingredient)
                         
                     case (.animal, _):
-                        // Animal products are never safe
-                        print("🚫 Animal ingredient - not safe for any preference")
                         nonVegan.append(ingredient)
                         
-                    case (.eggetarian, .eggetarian),
-                         (.eggetarian, .pescatorian):
-                        // Eggs are safe for eggetarians and pescatarians
-                        print("✅ Egg ingredient - safe for eggetarian/pescatarian")
+                    case (.eggetarian, .eggetarian):
                         vegan.append(ingredient)
                         
                     case (.eggetarian, _):
-                        // Eggs are not safe for others
-                        print("🚫 Egg ingredient - not safe for this preference")
                         nonVegan.append(ingredient)
                         
                     case (.pescatarian, .pescatorian):
-                        // Fish is safe for pescatarians
-                        print("✅ Fish/seafood ingredient - safe for pescatarians")
                         vegan.append(ingredient)
                         
                     case (.pescatarian, _):
-                        // Fish is not safe for others
-                        print("🚫 Fish/seafood ingredient - not safe for this preference")
                         nonVegan.append(ingredient)
                         
                     case (.both, _):
-                        // For uncertain ingredients, classify as non-vegan to be safe
-                        print("⚠️ Uncertain ingredient - classifying as non-vegan")
                         nonVegan.append(ingredient)
                     }
                 } else {
-                    // If no ingredient type is set, check food group again
-                    if let foodGroup = ingredient.foodGroup,
-                       veganFoodGroups.contains(foodGroup) {
-                        print("🌱 No type set, but belongs to vegan food group: \(foodGroup)")
-                        vegan.append(ingredient)
-                    } else {
-                        print("⚠️ No type set and no vegan food group - classifying as non-vegan")
-                        nonVegan.append(ingredient)
-                    }
-                }
-                
-                // Classify based on food group preference
-                if let foodGroup = ingredient.foodGroup {
-                    if !preference.blacklistedIngredientGroups.contains(foodGroup) {
-                        print("✅ Food group not blacklisted: \(foodGroup)")
-                        whitelisted.append(ingredient)
-                    } else {
-                        print("⛔️ Food group is blacklisted: \(foodGroup)")
-                        blacklisted.append(ingredient)
-                    }
+                    unclassified.append(ingredient)
                 }
             } else {
                 // Skip common non-ingredient text patterns
@@ -774,74 +823,10 @@ class IngredientStore {
                 ]
                 
                 if skipPatterns.contains(where: { lowercasedItem.contains($0) }) {
-                    print("⏭️ Skipping non-ingredient text: \(lowercasedItem)")
                     return
                 }
                 
-                // Check in knownIngredients first
-                let formattedName = cleanedItem.lowercased().replacingOccurrences(of: " ", with: "_")
-                if let type = knownIngredients[formattedName] {
-                    print("📍 Found in known ingredients list: \(cleanedItem)")
-                    let knownIngredient = Ingredient(
-                        id: -Int.random(in: 1...999999),
-                        name: cleanedItem.capitalized,
-                        nameScientific: nil,
-                        description: nil,
-                        itisId: nil,
-                        wikipediaId: nil,
-                        foodGroup: nil,
-                        foodSubgroup: nil,
-                        foodType: "known",
-                        category: nil,
-                        ncbiTaxonomyId: nil,
-                        publicId: "known_\(UUID().uuidString)",
-                        ingredientType: type
-                    )
-                    
-                    switch type {
-                    case .vegan:
-                        print("✅ Known vegan ingredient")
-                        vegan.append(knownIngredient)
-                    case .vegetarian:
-                        print("🥚 Known vegetarian ingredient")
-                        nonVegan.append(knownIngredient)
-                    case .animal:
-                        print("🚫 Known animal ingredient")
-                        nonVegan.append(knownIngredient)
-                    case .both:
-                        print("")
-                    case .eggetarian:
-                        print("🥚 Known eggetarian ingredient")
-                        nonVegan.append(knownIngredient)
-                    case .pescatarian:
-                        print("🐟 Known pescatarian ingredient")
-                        nonVegan.append(knownIngredient)
-                    }
-                    return
-                }
-                
-                print("🔍 Searching for similar ingredients")
-                // Try to find a similar ingredient in the database
-                let similarIngredients = ingredients.filter { ingredient in
-                    let similarName = ingredient.name.lowercased()
-                    return similarName.contains(lowercasedItem) || lowercasedItem.contains(similarName)
-                }
-                
-                if let matchedIngredient = similarIngredients.first {
-                    print("📍 Found similar ingredient: \(matchedIngredient.name)")
-                    // Use the matched ingredient's food group to classify
-                    if let foodGroup = matchedIngredient.foodGroup,
-                       veganFoodGroups.contains(foodGroup) {
-                        print("✅ Similar ingredient belongs to vegan food group: \(foodGroup)")
-                        var veganIngredient = matchedIngredient
-                        veganIngredient.ingredientType = .vegan
-                        vegan.append(veganIngredient)
-                        return
-                    }
-                }
-                
-                print("❓ No matches found - adding to unclassified")
-                // Create a temporary ingredient for unclassified items
+                // Create unclassified ingredient
                 let unclassifiedIngredient = Ingredient(
                     id: -Int.random(in: 1...999999),
                     name: cleanedItem.capitalized,
@@ -861,24 +846,12 @@ class IngredientStore {
             }
         }
         
-        print("\n=== Final classification counts ===")
-        print("Whitelisted: \(whitelisted.count)")
-        print("Blacklisted: \(blacklisted.count)")
-        print("Vegan: \(vegan.count)")
-        print("Non-vegan: \(nonVegan.count)")
-        print("Unclassified: \(unclassified.count)")
-        
         // Remove duplicates while preserving order
         whitelisted = Array(NSOrderedSet(array: whitelisted).array as! [Ingredient])
         blacklisted = Array(NSOrderedSet(array: blacklisted).array as! [Ingredient])
         vegan = Array(NSOrderedSet(array: vegan).array as! [Ingredient])
         nonVegan = Array(NSOrderedSet(array: nonVegan).array as! [Ingredient])
         unclassified = Array(NSOrderedSet(array: unclassified).array as! [Ingredient])
-        
-        // Remove ingredients from whitelisted/blacklisted if they're already in vegan/non-vegan
-        let veganNonVeganIds = Set(vegan.map { $0.id } + nonVegan.map { $0.id })
-        whitelisted = whitelisted.filter { !veganNonVeganIds.contains($0.id) }
-        blacklisted = blacklisted.filter { !veganNonVeganIds.contains($0.id) }
         
         return (whitelisted, blacklisted, vegan, nonVegan, unclassified)
     }
