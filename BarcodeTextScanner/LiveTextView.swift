@@ -57,10 +57,61 @@ struct LiveTextDecoder {
             // Tokenize the text
             let tokens = analysis.transcript
                 .components(separatedBy: CharacterSet(charactersIn: ",\n"))
-                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .flatMap { token -> [String] in
+                    // Clean up each token
+                    let cleaned = token
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .replacingOccurrences(of: " - ", with: " ")
+                        .replacingOccurrences(of: "-", with: " ")
+                        .replacingOccurrences(of: "  ", with: " ")
+                    
+                    // Split on common ingredient separators and handle compound ingredients
+                    let subTokens = cleaned.components(separatedBy: CharacterSet(charactersIn: "()[]"))
+                        .flatMap { $0.components(separatedBy: " and ") }
+                        .flatMap { $0.components(separatedBy: " & ") }
+                        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                        .filter { !$0.isEmpty }
+                    
+                    // Filter out common non-ingredient text patterns
+                    let filteredTokens = subTokens.filter { token in
+                        let lowercased = token.lowercased()
+                        
+                        // Helper function to check if string matches regex pattern
+                        func matches(pattern: String, in text: String) -> Bool {
+                            guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
+                            let range = NSRange(text.startIndex..., in: text)
+                            return regex.firstMatch(in: text, range: range) != nil
+                        }
+                        
+                        return !lowercased.contains("www") &&
+                               !lowercased.contains(".com") &&
+                               !lowercased.contains("alamy") &&
+                               !lowercased.contains("image") &&
+                               !lowercased.contains("id") &&
+                               !lowercased.contains("suitable for") &&
+                               !lowercased.contains("vegetarian") &&
+                               !lowercased.contains("eet") &&
+                               !lowercased.contains("ohh") &&
+                               !lowercased.contains("rgot") &&
+                               !lowercased.contains("sar") &&
+                               !matches(pattern: #"^\d+$"#, in: lowercased) &&
+                               !matches(pattern: #"^e\d+$"#, in: lowercased)
+                    }
+                    
+                    return filteredTokens
+                }
                 .filter { !$0.isEmpty }
             
-            return tokens
+            // Remove duplicates while preserving order
+            var seen = Set<String>()
+            let uniqueTokens = tokens.filter { token in
+                let lowercased = token.lowercased()
+                let isNew = !seen.contains(lowercased)
+                seen.insert(lowercased)
+                return isNew
+            }
+            
+            return uniqueTokens
             
         } catch {
             return []
