@@ -9,6 +9,6 @@ import SwiftUI
 
 struct SafeBackgroundView: View {
     var body: some View {
-        LinearGradient(colors: [Color(red: 0.16, green: 0.59, blue: 0.1), Color(red: 0.49, green: 0.77, blue: 0.22)], startPoint: .top, endPoint: .bottom)
+         LinearGradient(colors: [Color(red: 0.08, green: 0.48, blue: 0.03), Color(red: 0.12, green: 0.35, blue: 0.04)], startPoint: .top, endPoint: .bottom)
     }
 }
