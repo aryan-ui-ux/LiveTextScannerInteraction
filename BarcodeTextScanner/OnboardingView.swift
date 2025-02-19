@@ -12,11 +12,13 @@ struct LottieView: UIViewRepresentable {
     let animationName: String
     let loopMode: LottieLoopMode
     let contentMode: UIView.ContentMode
+    let animationSpeed: Double
     
-    init(name: String, loopMode: LottieLoopMode = .loop, contentMode: UIView.ContentMode = .scaleAspectFit) {
+    init(name: String, loopMode: LottieLoopMode = .loop, contentMode: UIView.ContentMode = .scaleAspectFit, animationSpeed: Double = 3.0) {
         self.animationName = name
         self.loopMode = loopMode
         self.contentMode = contentMode
+        self.animationSpeed = animationSpeed
     }
     
     func makeUIView(context: Context) -> UIView {
@@ -27,6 +29,7 @@ struct LottieView: UIViewRepresentable {
             animationView.animation = animation
             animationView.contentMode = contentMode
             animationView.loopMode = loopMode
+            animationView.animationSpeed = animationSpeed
             animationView.play()
             
             animationView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +55,7 @@ struct OnboardingView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    LottieView(name: "Onboarding (Safe)")
+                    LottieView(name: "Onboarding (Safe)", animationSpeed: 2)
                         .aspectRatio(18/29, contentMode: .fit)
                     
                     Spacer()
