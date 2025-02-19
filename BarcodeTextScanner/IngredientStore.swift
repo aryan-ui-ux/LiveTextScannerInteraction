@@ -12,6 +12,8 @@ enum IngredientType: String, Codable {
     case vegetarian
     case animal
     case both
+    case eggetarian
+    case pescatarian
 }
 
 struct Ingredient: Codable, Identifiable, Hashable {
@@ -73,8 +75,6 @@ class IngredientStore {
         "betatene": .vegan,
         "biotin": .both,
         "bone": .animal,
-        "bone_char": .animal,
-        "bone_phosphate": .animal,
         "bonito": .animal,
         "brawn": .animal,
         "brewers_yeast": .vegan,
@@ -98,11 +98,8 @@ class IngredientStore {
         "carbamide": .both,
         "carbon_black": .both,
         "carbonic_acid": .vegan,
-        "carmine": .animal,
         "carnauba_wax": .vegan,
         "carotene": .vegan,
-        "carrageenan": .vegan,
-        "casein": .animal,
         "cashmere": .animal,
         "castor": .animal,
         "castor_oil": .vegan,
@@ -170,7 +167,6 @@ class IngredientStore {
         "folate": .both,
         "folic_acid": .vegan,
         "fructose_syrup": .vegan,
-        "gelatin": .animal,
         "glucono_delta_lactone": .both,
         "gluconolactone": .both,
         "glucose": .both,
@@ -190,7 +186,6 @@ class IngredientStore {
         "inositol": .both,
         "insulin": .both,
         "inulin": .vegan,
-        "isinglass": .animal,
         "katsuobushi": .animal,
         "keratin": .animal,
         "l_cysteine": .both,
@@ -198,14 +193,11 @@ class IngredientStore {
         "lactic_acid": .both,
         "lactase": .vegan,
         "lactoflavin": .both,
-        "lactose": .animal,
         "lanolin": .animal,
-        "lard": .animal,
         "laurel": .vegan,
         "lauric_acid": .vegan,
         "lauryl_alcohol": .vegan,
         "leather": .animal,
-        "lecithin": .both,
         "limestone": .vegan,
         "lipase": .both,
         "lipoxygenase": .vegan,
@@ -255,7 +247,6 @@ class IngredientStore {
         "paraffin": .vegan,
         "parchment": .both,
         "pearl": .animal,
-        "pectin": .vegan,
         "peg": .both,
         "pepsin": .animal,
         "petroleum": .vegan,
@@ -281,7 +272,6 @@ class IngredientStore {
         "propylene_oxide": .vegan,
         "quinoline_yellow": .both,
         "reduced_iron": .vegan,
-        "rennet": .both,
         "rennin": .both,
         "red_40": .both,
         "resinous_glaze": .animal,
@@ -292,7 +282,6 @@ class IngredientStore {
         "royal_jelly": .animal,
         "sable": .animal,
         "salicylic_acid": .vegan,
-        "shellac": .animal,
         "silk": .animal,
         "sodium_alginate": .vegan,
         "sodium_aluminum_sulfate": .vegan,
@@ -306,9 +295,6 @@ class IngredientStore {
         "sorbitol": .vegan,
         "spermaceti": .animal,
         "squalene": .animal,
-        "salt": .vegan,
-        "flour": .vegan,
-        "starch": .vegan,
         "stearic_acid": .both,
         "stearyl_alcohol": .both,
         "sucrose": .vegan,
@@ -316,7 +302,6 @@ class IngredientStore {
         "sunflower_lecithin": .vegan,
         "sunset_yellow_fcf": .both,
         "talc": .vegan,
-        "tallow": .animal,
         "tartaric_acid": .vegan,
         "tartrazine": .both,
         "thiamine": .both,
@@ -340,11 +325,7 @@ class IngredientStore {
         "vitamin_d3": .both,
         "vitamin_e": .both,
         "wax": .both,
-        "whey": .animal,
         "wool": .animal,
-        "xanthan_gum": .vegan,
-        "yeast": .vegan,
-        "zinc_stearate": .both,
         "e100": .vegan,
         "e101": .both,
         "e101a": .both,
@@ -394,17 +375,12 @@ class IngredientStore {
         "e433": .both,
         "e434": .both,
         "e435": .both,
-        "egg": .vegetarian,
-        "egg_white": .vegetarian,
-        "egg_yolk": .vegetarian,
-        "albumin": .vegetarian,
-        "milk": .vegetarian,
+        "dried_egg": .eggetarian,
+        "liquid_egg": .eggetarian,
+        "egg_substitute": .eggetarian,
+        "egg_lecithin": .eggetarian,
         "milk_powder": .vegetarian,
-        "cream": .vegetarian,
-        "butter": .vegetarian,
         "ghee": .vegetarian,
-        "cheese": .vegetarian,
-        "yogurt": .vegetarian,
         "curd": .vegetarian,
         "paneer": .vegetarian,
         "whey_protein": .vegetarian,
@@ -420,32 +396,160 @@ class IngredientStore {
         "pork": .animal,
         "chicken": .animal,
         "mutton": .animal,
-        "fish": .animal,
+        "fish": .pescatarian,
         "seafood": .animal,
-        "shrimp": .animal,
-        "prawn": .animal,
-        "crab": .animal,
-        "lobster": .animal,
-        "oyster": .animal,
-        "mussel": .animal,
-        "clam": .animal,
-        "squid": .animal,
-        "octopus": .animal,
-        "anchovies": .animal,
-        "fish_sauce": .animal,
-        "fish_oil": .animal,
+        "shrimp": .pescatarian,
+        "prawn": .pescatarian,
+        "crab": .pescatarian,
+        "lobster": .pescatarian,
+        "oyster": .pescatarian,
+        "mussel": .pescatarian,
+        "clam": .pescatarian,
+        "squid": .pescatarian,
+        "octopus": .pescatarian,
+        "anchovies": .pescatarian,
+        "fish_sauce": .pescatarian,
         "animal_fat": .animal,
-        "fish_oil": .animal,
-        "lard": .animal,
-        "tallow": .animal,
-        "gelatin": .animal,
         "rennet": .animal,
-        "pepsin": .animal,
         "isinglass": .animal,
         "carmine": .animal,
         "shellac": .animal,
         "bone_char": .animal,
-        "bone_phosphate": .animal
+        "bone_phosphate": .animal,
+        "salmon": .pescatarian,
+        "tuna": .pescatarian,
+        "cod": .pescatarian,
+        "halibut": .pescatarian,
+        "mackerel": .pescatarian,
+        "sardines": .pescatarian,
+        "scallop": .pescatarian,
+        "seaweed": .vegan,
+        "nori": .vegan,
+        "wakame": .vegan,
+        "kelp": .vegan,
+        "lamb": .animal,
+        "veal": .animal,
+        "goat": .animal,
+        "duck": .animal,
+        "turkey": .animal,
+        "bacon": .animal,
+        "ham": .animal,
+        "sausage": .animal,
+        "gelatin": .animal,
+        "lard": .animal,
+        "tallow": .animal,
+        "milk": .vegetarian,
+        "cheese": .vegetarian,
+        "butter": .vegetarian,
+        "cream": .vegetarian,
+        "yogurt": .vegetarian,
+        "whey": .vegetarian,
+        "casein": .vegetarian,
+        "lactose": .vegetarian,
+        "egg": .eggetarian,
+        "egg_white": .eggetarian,
+        "egg_yolk": .eggetarian,
+        "albumin": .eggetarian,
+        "egg_powder": .eggetarian,
+        "egg_solids": .eggetarian,
+        "tofu": .vegan,
+        "tempeh": .vegan,
+        "seitan": .vegan,
+        "soy": .vegan,
+        "lentils": .vegan,
+        "beans": .vegan,
+        "chickpeas": .vegan,
+        "nuts": .vegan,
+        "seeds": .vegan,
+        "vegetables": .vegan,
+        "fruits": .vegan,
+        "grains": .vegan,
+        "rice": .vegan,
+        "wheat": .vegan,
+        "corn": .vegan,
+        "quinoa": .vegan,
+        "sugar": .vegan,
+        "salt": .vegan,
+        "spices": .vegan,
+        "herbs": .vegan,
+        "oil": .vegan,
+        "vinegar": .vegan,
+        "yeast": .vegan,
+        "starch": .vegan,
+        "flour": .vegan,
+        "baking_powder": .vegan,
+        "baking_soda": .vegan,
+        "pectin": .vegan,
+        "agar": .vegan,
+        "carrageenan": .vegan,
+        "xanthan_gum": .vegan,
+        "lecithin": .both,
+        "natural_flavors": .both,
+        "artificial_flavors": .both,
+        "colors": .both,
+        "preservatives": .both,
+        "potato": .vegan,
+        "onion": .vegan,
+        "garlic": .vegan,
+        "ginger": .vegan,
+        "carrot": .vegan,
+        "radish": .vegan,
+        "beetroot": .vegan,
+        "sweet_potato": .vegan,
+        "turnip": .vegan,
+        "yam": .vegan,
+        "cassava": .vegan,
+        "turmeric_root": .vegan,
+        "mushroom": .vegan,
+        "broccoli": .vegan,
+        "cauliflower": .vegan,
+        "cabbage": .vegan,
+        "sprouts": .vegan,
+        "bamboo_shoot": .vegan,
+        "eggplant": .vegan,
+        "asparagus": .vegan,
+        "artichoke": .vegan,
+        "leek": .vegan,
+        "shallot": .vegan,
+        "horseradish": .vegan,
+        "parsnip": .vegan,
+        "rutabaga": .vegan,
+        "celeriac": .vegan,
+        "wasabi": .vegan,
+        "lotus_root": .vegan,
+        "arrowroot": .vegan,
+        "galangal": .vegan,
+        "maca_root": .vegan,
+        "burdock_root": .vegan,
+        "sunchoke": .vegan,
+        "jicama": .vegan,
+        "brussels_sprouts": .vegan,
+        "fiddleheads": .vegan,
+        "water_chestnut": .vegan,
+        "corn_sprouts": .vegan,
+        "bean_sprouts": .vegan,
+        "alfalfa_sprouts": .vegan,
+        "microgreens": .vegan,
+        "kohlrabi": .vegan,
+        "romanesco": .vegan,
+        "sea_vegetables": .vegan,
+        "tomato": .vegan,
+        "bell_pepper": .vegan,
+        "chili_pepper": .vegan,
+        "pumpkin": .vegan,
+        "squash": .vegan,
+        "cucumber": .vegan,
+        "zucchini": .vegan,
+        "okra": .vegan,
+        "sauerkraut": .vegan,
+        "kimchi": .vegan,
+        "miso": .vegan,
+        "natto": .vegan,
+        "kombucha": .vegan,
+        "pickled_vegetables": .vegan,
+        "fermented_foods": .vegan,
+        "night_harvested_vegetables": .vegan,
+        "night_picked_vegetables": .vegan
     ]
     
     init() {
@@ -544,6 +648,12 @@ class IngredientStore {
             "Coffee and coffee products"
         ]
         
+        // Define non-vegetarian food groups
+        let nonVegFoodGroups = [
+            "Animal foods",
+            "Aquatic foods"
+        ]
+        
         // Track processed items to avoid duplicates
         var processedItems = Set<String>()
         
@@ -565,9 +675,15 @@ class IngredientStore {
                 print("📍 Found in ingredient database: \(ingredients[index].name)")
                 var ingredient = ingredients[index]
                 
-                // Check if the ingredient belongs to a vegan food group
+                // First check if the ingredient belongs to a non-veg food group
                 if let foodGroup = ingredient.foodGroup,
-                   veganFoodGroups.contains(foodGroup) {
+                   nonVegFoodGroups.contains(foodGroup) {
+                    print("🍖 Ingredient belongs to non-vegetarian food group: \(foodGroup)")
+                    ingredient.ingredientType = .animal
+                }
+                // Then check if it belongs to a vegan food group
+                else if let foodGroup = ingredient.foodGroup,
+                        veganFoodGroups.contains(foodGroup) {
                     print("🌱 Ingredient belongs to vegan food group: \(foodGroup)")
                     ingredient.ingredientType = .vegan
                 } else {
@@ -575,33 +691,68 @@ class IngredientStore {
                     ingredient.ingredientType = classifyIngredient(cleanedItem)
                 }
                 
-                // First, classify based on vegan status
-                switch ingredient.ingredientType {
-                case .vegan:
-                    print("✅ Classified as vegan")
-                    vegan.append(ingredient)
-                case .vegetarian:
-                    print("🥚 Classified as vegetarian")
-                    nonVegan.append(ingredient)
-                case .animal:
-                    print("🚫 Classified as animal-derived")
-                    nonVegan.append(ingredient)
-                case .both:
-                    print("⚠️ Could be either - classifying as vegetarian to be safe")
-                    nonVegan.append(ingredient)
-                case .none:
+                // Classify based on ingredient type and user preference
+                if let type = ingredient.ingredientType {
+                    switch (type, preference) {
+                    case (.vegan, _):
+                        // Vegan ingredients are safe for all preferences
+                        print("✅ Vegan ingredient - safe for all preferences")
+                        vegan.append(ingredient)
+                        
+                    case (.vegetarian, .vegan):
+                        // Dairy is not safe for vegans
+                        print("🚫 Dairy ingredient - not safe for vegans")
+                        nonVegan.append(ingredient)
+                        
+                    case (.vegetarian, _):
+                        // Dairy is safe for vegetarians and others
+                        print("✅ Dairy ingredient - safe for non-vegan preferences")
+                        vegan.append(ingredient)
+                        
+                    case (.animal, _):
+                        // Animal products are never safe
+                        print("🚫 Animal ingredient - not safe for any preference")
+                        nonVegan.append(ingredient)
+                        
+                    case (.eggetarian, .eggetarian),
+                         (.eggetarian, .pescatorian):
+                        // Eggs are safe for eggetarians and pescatarians
+                        print("✅ Egg ingredient - safe for eggetarian/pescatarian")
+                        vegan.append(ingredient)
+                        
+                    case (.eggetarian, _):
+                        // Eggs are not safe for others
+                        print("🚫 Egg ingredient - not safe for this preference")
+                        nonVegan.append(ingredient)
+                        
+                    case (.pescatarian, .pescatorian):
+                        // Fish is safe for pescatarians
+                        print("✅ Fish/seafood ingredient - safe for pescatarians")
+                        vegan.append(ingredient)
+                        
+                    case (.pescatarian, _):
+                        // Fish is not safe for others
+                        print("🚫 Fish/seafood ingredient - not safe for this preference")
+                        nonVegan.append(ingredient)
+                        
+                    case (.both, _):
+                        // For uncertain ingredients, classify as non-vegan to be safe
+                        print("⚠️ Uncertain ingredient - classifying as non-vegan")
+                        nonVegan.append(ingredient)
+                    }
+                } else {
                     // If no ingredient type is set, check food group again
                     if let foodGroup = ingredient.foodGroup,
                        veganFoodGroups.contains(foodGroup) {
                         print("🌱 No type set, but belongs to vegan food group: \(foodGroup)")
                         vegan.append(ingredient)
                     } else {
-                        print("⚠️ No type set and no vegan food group - classifying as vegetarian")
+                        print("⚠️ No type set and no vegan food group - classifying as non-vegan")
                         nonVegan.append(ingredient)
                     }
                 }
                 
-                // Then, classify based on food group preference
+                // Classify based on food group preference
                 if let foodGroup = ingredient.foodGroup {
                     if !preference.blacklistedIngredientGroups.contains(foodGroup) {
                         print("✅ Food group not blacklisted: \(foodGroup)")
@@ -657,6 +808,14 @@ class IngredientStore {
                     case .animal:
                         print("🚫 Known animal ingredient")
                         nonVegan.append(knownIngredient)
+                    case .both:
+                        print("")
+                    case .eggetarian:
+                        print("🥚 Known eggetarian ingredient")
+                        nonVegan.append(knownIngredient)
+                    case .pescatarian:
+                        print("🐟 Known pescatarian ingredient")
+                        nonVegan.append(knownIngredient)
                     }
                     return
                 }
@@ -673,7 +832,7 @@ class IngredientStore {
                     // Use the matched ingredient's food group to classify
                     if let foodGroup = matchedIngredient.foodGroup,
                        veganFoodGroups.contains(foodGroup) {
-                        print("🌱 Similar ingredient belongs to vegan food group: \(foodGroup)")
+                        print("✅ Similar ingredient belongs to vegan food group: \(foodGroup)")
                         var veganIngredient = matchedIngredient
                         veganIngredient.ingredientType = .vegan
                         vegan.append(veganIngredient)

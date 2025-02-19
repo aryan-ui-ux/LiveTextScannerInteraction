@@ -80,6 +80,13 @@ struct SafeView: View {
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
                         }
+                        
+                        if !unclassifiedIngredients.isEmpty {
+                            Text("⚠️ Contains unclassified ingredients")
+                                .foregroundColor(.orange)
+                                .padding(.horizontal)
+                                .padding(.top, 8)
+                        }
                     }
                     
                     Spacer()
@@ -135,14 +142,22 @@ struct SafeView: View {
             print("\n=== Unclassified Ingredients ===")
             unclassifiedIngredients.forEach { print($0.name) }
             
-            // Product is safe only if:
-            // 1. No animal ingredients (for vegetarians, dairy/eggs are ok)
-            // 2. No blacklisted ingredients
-            // 3. No unclassified ingredients (to be safe)
+            // Product safety determination:
+            // 1. Check for animal ingredients
             let hasAnimalIngredients = !nonVeganIngredients.filter { $0.ingredientType == .animal }.isEmpty
-            isSafe = !hasAnimalIngredients && 
-                    blacklistedIngredients.isEmpty && 
-                    unclassifiedIngredients.isEmpty
+            
+            // 2. Check for blacklisted ingredients based on preference
+            let hasBlacklistedIngredients = !blacklistedIngredients.isEmpty
+            
+            // 3. Determine safety - now unclassified ingredients don't automatically make it unsafe
+            isSafe = !hasAnimalIngredients && !hasBlacklistedIngredients
+            
+            // Print debug information
+            print("\n=== Safety Determination ===")
+            print("Has animal ingredients: \(hasAnimalIngredients)")
+            print("Has blacklisted ingredients: \(hasBlacklistedIngredients)")
+            print("Has unclassified ingredients: \(!unclassifiedIngredients.isEmpty)")
+            print("Final safety determination: \(isSafe)")
         }
         .sheet(isPresented: $showDetailView) {
             IngredientsListView(
@@ -169,35 +184,7 @@ struct IngredientsListView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 16) {
-                    if !nonVeganIngredients.isEmpty {
-                        // Animal ingredients (strictly non-vegetarian)
-                        IngredientSection(
-                            title: "Animal Ingredients",
-                            ingredients: nonVeganIngredients.filter { $0.ingredientType == .animal },
-                            iconName: "xmark.circle.fill",
-                            iconColor: .red
-                        )
-                        
-                        // Vegetarian ingredients (like dairy and eggs)
-                        if !nonVeganIngredients.filter({ $0.ingredientType == .vegetarian }).isEmpty {
-                            IngredientSection(
-                                title: "Vegetarian Ingredients",
-                                ingredients: nonVeganIngredients.filter { $0.ingredientType == .vegetarian },
-                                iconName: "leaf.circle.fill",
-                                iconColor: .orange
-                            )
-                        }
-                        
-                        // Uncertain ingredients
-                        if !nonVeganIngredients.filter({ $0.ingredientType == .both }).isEmpty {
-                            IngredientSection(
-                                title: "Potentially Animal-Derived",
-                                ingredients: nonVeganIngredients.filter { $0.ingredientType == .both },
-                                iconName: "exclamationmark.triangle.fill",
-                                iconColor: .yellow
-                            )
-                        }
-                    }
+                    NonVeganIngredientsSection(nonVeganIngredients: nonVeganIngredients)
                     
                     if !blacklistedIngredients.isEmpty {
                         IngredientSection(
@@ -257,6 +244,138 @@ struct IngredientsListView: View {
                     .tint(.white)
                 }
             }
+        }
+    }
+}
+
+struct NonVeganIngredientsSection: View {
+    let nonVeganIngredients: [Ingredient]
+    
+    var body: some View {
+        Group {
+            if !nonVeganIngredients.isEmpty {
+                // Animal ingredients section
+                AnimalIngredientsSection(nonVeganIngredients: nonVeganIngredients)
+                
+                // Seafood ingredients section
+                SeafoodIngredientsSection(nonVeganIngredients: nonVeganIngredients)
+                
+                // Egg ingredients section
+                EggIngredientsSection(nonVeganIngredients: nonVeganIngredients)
+                
+                // Dairy ingredients section
+                DairyIngredientsSection(nonVeganIngredients: nonVeganIngredients)
+                
+                // Uncertain ingredients section
+                UncertainIngredientsSection(nonVeganIngredients: nonVeganIngredients)
+            }
+        }
+    }
+}
+
+struct AnimalIngredientsSection: View {
+    let nonVeganIngredients: [Ingredient]
+    
+    var body: some View {
+        let animalIngredients = nonVeganIngredients.filter { $0.ingredientType == .animal }
+        if !animalIngredients.isEmpty {
+            IngredientSection(
+                title: "Animal Ingredients",
+                ingredients: animalIngredients,
+                iconName: "xmark.circle.fill",
+                iconColor: .red
+            )
+        }
+    }
+}
+
+struct SeafoodIngredientsSection: View {
+    let nonVeganIngredients: [Ingredient]
+    
+    private var pescatarianIngredients: [Ingredient] {
+        nonVeganIngredients.filter { $0.ingredientType == .pescatarian }
+    }
+    
+    private var fishIngredients: [Ingredient] {
+        pescatarianIngredients.filter { ingredient in
+            let fishTypes = ["fish", "salmon", "tuna", "cod", "halibut", "mackerel", "sardines", "anchovies"]
+            return fishTypes.contains { ingredient.name.lowercased().contains($0) }
+        }
+    }
+    
+    private var otherSeafoodIngredients: [Ingredient] {
+        pescatarianIngredients.filter { !fishIngredients.contains($0) }
+    }
+    
+    var body: some View {
+        Group {
+            if !pescatarianIngredients.isEmpty {
+                if !fishIngredients.isEmpty {
+                    IngredientSection(
+                        title: "Fish Ingredients",
+                        ingredients: fishIngredients,
+                        iconName: "fish.fill",
+                        iconColor: .blue
+                    )
+                }
+                
+                if !otherSeafoodIngredients.isEmpty {
+                    IngredientSection(
+                        title: "Other Seafood Ingredients",
+                        ingredients: otherSeafoodIngredients,
+                        iconName: "water.waves",
+                        iconColor: .cyan
+                    )
+                }
+            }
+        }
+    }
+}
+
+struct EggIngredientsSection: View {
+    let nonVeganIngredients: [Ingredient]
+    
+    var body: some View {
+        let eggetarianIngredients = nonVeganIngredients.filter { $0.ingredientType == .eggetarian }
+        if !eggetarianIngredients.isEmpty {
+            IngredientSection(
+                title: "Egg-Based Ingredients",
+                ingredients: eggetarianIngredients,
+                iconName: "egg.fill",
+                iconColor: .yellow
+            )
+        }
+    }
+}
+
+struct DairyIngredientsSection: View {
+    let nonVeganIngredients: [Ingredient]
+    
+    var body: some View {
+        let vegetarianIngredients = nonVeganIngredients.filter { $0.ingredientType == .vegetarian }
+        if !vegetarianIngredients.isEmpty {
+            IngredientSection(
+                title: "Dairy Ingredients",
+                ingredients: vegetarianIngredients,
+                iconName: "leaf.circle.fill",
+                iconColor: .orange
+            )
+        }
+    }
+}
+
+struct UncertainIngredientsSection: View {
+    let nonVeganIngredients: [Ingredient]
+    
+    var body: some View {
+        let uncertainIngredients = nonVeganIngredients.filter { $0.ingredientType == .both }
+        if !uncertainIngredients.isEmpty {
+            IngredientSection(
+                title: "Potentially Animal-Derived",
+                ingredients: uncertainIngredients,
+                iconName: "exclamationmark.triangle.fill",
+                iconColor: .yellow
+            )
         }
     }
 }
