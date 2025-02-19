@@ -52,8 +52,6 @@ struct SafeView: View {
             return !hasAnimalIngredients && !hasPescatarianIngredients
         case .pescatorian:
             return !hasAnimalIngredients && !hasEggIngredients
-        case .jain:
-            return false
         }
     }
     
@@ -219,8 +217,6 @@ struct IngredientsListView: View {
             return hasAnimalIngredients || hasPescatarianIngredients
         case .pescatorian:
             return hasAnimalIngredients || hasEggIngredients
-        case .jain:
-            return false
         }
     }
     
