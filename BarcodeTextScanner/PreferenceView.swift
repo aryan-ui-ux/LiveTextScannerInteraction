@@ -39,6 +39,10 @@ enum Preference: String, CaseIterable {
                 return ["Animal foods", "Aquatic foods"]
         }
     }
+    
+    var unsureIngredients: [String] {
+        return ["Animal & Plant Derived"]
+    }
 }
     
 struct PreferenceView: View {

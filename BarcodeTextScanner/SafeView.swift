@@ -18,6 +18,7 @@ struct SafeView: View {
     let preference: Preference
     @State var whitelistedIngredients: [Ingredient] = []
     @State var blacklistedIngredients: [Ingredient] = []
+    @State var notSureIngredients: [Ingredient] = []
     @State var unclassifiedIngredients: [String] = []
     @State var state: SafetyState? = nil
     @State var showDetailView: Bool = false
@@ -127,6 +128,7 @@ struct SafeView: View {
             
             whitelistedIngredients = result.whitelisted
             blacklistedIngredients = result.blacklisted
+            notSureIngredients = result.notSure
             unclassifiedIngredients = result.unclassified
             
             if result.blacklisted.isEmpty && result.whitelisted.isEmpty {
@@ -138,7 +140,7 @@ struct SafeView: View {
             }
         }
         .sheet(isPresented: $showDetailView) {
-            IngredientsListView(state: state, whitelistedIngredients: $whitelistedIngredients, blacklistedIngredients: $blacklistedIngredients, unclassifiedIngredients: $unclassifiedIngredients)
+            IngredientsListView(preference: preference, state: state, whitelistedIngredients: $whitelistedIngredients, blacklistedIngredients: $blacklistedIngredients, notSureIngredients: $notSureIngredients, unclassifiedIngredients: $unclassifiedIngredients)
             .environment(\.colorScheme, .dark)
         }
     }
@@ -147,9 +149,11 @@ struct SafeView: View {
 
 struct IngredientsListView: View {
     @Environment(\.dismiss) private var dismiss
+    let preference: Preference
     let state: SafeView.SafetyState?
     @Binding var whitelistedIngredients: [Ingredient]
     @Binding var blacklistedIngredients: [Ingredient]
+    @Binding var notSureIngredients: [Ingredient]
     @Binding var unclassifiedIngredients: [String]
     
     var body: some View {
@@ -171,12 +175,46 @@ struct IngredientsListView: View {
                                         .multilineTextAlignment(.leading)
                                         .font(.body)
                                     
-                                    Image(systemName: "exclamationmark.triangle.fill")
+                                    Image(systemName: "exclamationmark.circle.fill")
                                         .font(.body)
                                 }
                                 .padding()
                                 
                                 if ingredient != blacklistedIngredients.last {
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundStyle(Color.white.opacity(0.2))
+                                        .padding(.leading)
+                                }
+                            }
+                        }
+                        .background(Color.black.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: 16))
+                    }
+                    .padding(.horizontal)
+                }
+                
+                if !notSureIngredients.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Ambigious ingredients")
+                            .textCase(.uppercase)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
+                        
+                        LazyVStack(spacing: 0) {
+                            ForEach(notSureIngredients, id: \.self) { ingredient in
+                                HStack {
+                                    Text(ingredient.name)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .multilineTextAlignment(.leading)
+                                        .font(.body)
+                                    
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .font(.body)
+                                }
+                                
+                                if ingredient != notSureIngredients.last {
                                     Rectangle()
                                         .frame(height: 1)
                                         .foregroundStyle(Color.white.opacity(0.2))
@@ -218,7 +256,7 @@ struct IngredientsListView: View {
                     }
                     .padding(.horizontal)
                 }
-
+                
                 if !whitelistedIngredients.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Safe ingredients")

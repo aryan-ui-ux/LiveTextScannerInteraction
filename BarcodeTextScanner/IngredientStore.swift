@@ -71,6 +71,7 @@ class IngredientStore {
     ) -> (
         whitelisted: [Ingredient],
         blacklisted: [Ingredient],
+        notSure: [Ingredient],
         unclassified: [String]
     ) {
         
@@ -78,6 +79,7 @@ class IngredientStore {
         var addedItems: [String] = []
         var whitelisted: [Ingredient] = []
         var blacklisted: [Ingredient] = []
+        var notSure: [Ingredient] = []
         var unclassified: [String] = []
         
         func didFindAndAddIngredient(for text: String) -> Bool {
@@ -86,7 +88,10 @@ class IngredientStore {
                 let ingredient = ingredients[index]
                 if !addedIds.contains(ingredient.id) {
                     addedIds.append(ingredient.id)
-                    if preference.blacklistedIngredientGroups.contains(ingredient.foodGroup ?? "") {
+                    let foodGroup = ingredient.foodGroup ?? ""
+                    if preference.unsureIngredients.contains(foodGroup) {
+                        notSure.append(ingredient)
+                    } else if preference.blacklistedIngredientGroups.contains(foodGroup) {
                         blacklisted.append(ingredient)
                     } else {
                         whitelisted.append(ingredient)
@@ -110,7 +115,7 @@ class IngredientStore {
             }
         }
         
-        return (whitelisted, blacklisted, unclassified)
+        return (whitelisted, blacklisted, notSure, unclassified)
     }
     
     func singularizeWord(_ word: String) -> String {
