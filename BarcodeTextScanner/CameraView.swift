@@ -56,12 +56,6 @@ class CameraUIView: UIView, AVCapturePhotoCaptureDelegate {
             
             captureSession.addInput(input)
             captureSession.addOutput(photoOutput)
-            if photoOutput.isAppleProRAWSupported {
-                photoOutput.isAppleProRAWEnabled = true
-            } else {
-                assertionFailure()
-            }
-            photoOutput.maxPhotoQualityPrioritization = .speed
             
             let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
             previewLayer.videoGravity = .resizeAspectFill
