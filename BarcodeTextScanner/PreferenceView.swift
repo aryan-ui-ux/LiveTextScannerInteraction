@@ -41,7 +41,12 @@ enum Preference: String, CaseIterable {
     }
     
     var unsureIngredients: [String] {
-        return ["Animal & Plant Derived"]
+        switch self {
+            case .vegan:
+                return ["Animal & Plant Derived"]
+            default:
+                return []
+        }
     }
 }
     
