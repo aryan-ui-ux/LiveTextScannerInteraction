@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @AppStorage("preference") private var preference: String?
-    @StateObject private var vm = AppViewModel()
+    @StateObject private var vm: AppViewModel = .shared
     
     var body: some View {
         if preference != nil {
@@ -17,7 +17,7 @@ struct HomeView: View {
                 .environmentObject(vm)
                 .onAppear {
                     Task {
-                        await vm.requestDataScannerAccessStatus()
+                        await vm.requestCameraAccess()
                     }
                 }
         } else {

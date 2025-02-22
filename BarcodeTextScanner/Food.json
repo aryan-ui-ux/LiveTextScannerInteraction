@@ -18750,31 +18750,6 @@
         "public_id": "FOOD00750"
     },
     {
-        "id": 776,
-        "name": "Spread",
-        "name_scientific": null,
-        "description": "A spread is a food that is spread with a knife onto bread, crackers, or other bread products. Spreads are added to bread products to provide flavor and texture, and are an integral part of the dish, i.e. they should be distinguished from condiments, which are optional additions. Spreads should also be distinguished from dips, which do not employ a knife in applying it to crackers or chips, such as salsa. [Wikipedia]",
-        "itis_id": null,
-        "wikipedia_id": "Spread_(food)",
-        "picture_file_name": "776.jpg",
-        "picture_content_type": "image/jpeg",
-        "picture_file_size": 136322,
-        "picture_updated_at": "2012-04-20T09:29:20.000Z",
-        "legacy_id": null,
-        "food_group": "Baking goods",
-        "food_subgroup": "Baking goods",
-        "food_type": "Type 2",
-        "created_at": "2011-12-16T18:12:53.000Z",
-        "updated_at": "2019-05-14T18:05:31.000Z",
-        "creator_id": 2,
-        "updater_id": 2,
-        "export_to_afcdb": false,
-        "category": "specific",
-        "ncbi_taxonomy_id": null,
-        "export_to_foodb": false,
-        "public_id": "FOOD00751"
-    },
-    {
         "id": 777,
         "name": "Enchilada",
         "name_scientific": null,
@@ -25330,11 +25305,6 @@
         "food_group": "Vegetables"
       },
       {
-        "id": 1131,
-        "name": "Down",
-        "food_group": "Animal foods"
-      },
-      {
         "id": 1132,
         "name": "Duodenum Substances",
         "food_group": "Animal foods"
@@ -25403,11 +25373,6 @@
         "id": 1145,
         "name": "Feathers",
         "food_group": "Animal foods"
-      },
-      {
-        "id": 1146,
-        "name": "Felt",
-        "food_group": "Vegetables"
       },
       {
         "id": 1147,

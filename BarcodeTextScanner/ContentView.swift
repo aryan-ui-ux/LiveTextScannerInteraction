@@ -20,47 +20,55 @@ struct ContentView: View {
     @EnvironmentObject var vm: AppViewModel
     @State private var extractedText: String = ""
     @State private var result: ScanResult? = nil
+    @State private var showDemoImagePicker: Bool = false
     
     @State private var configuration: TranslationSession.Configuration?
     
-    var body: some View {
-        mainView
-    }
+    @State private var selectedIndex: Int = 1
     
-    @ViewBuilder
-    private var mainView: some View {
+    var body: some View {
         VStack(spacing: .zero) {
-            DataScannerView(
-                shouldCapturePhoto: $vm.shouldCapturePhoto,
-                capturedPhoto: $vm.capturedPhoto,
-                recognizedItems: $vm.recognizedItems,
-                recognizedDataType: vm.recognizedDataType,
-                recognizesMultipleItems: vm.recognizesMultipleItems
-            )
-            .clipShape(.rect(bottomLeadingRadius: 24, bottomTrailingRadius: 24))
+            CameraView()
+                .clipShape(.rect(bottomLeadingRadius: 24, bottomTrailingRadius: 24))
             
-            Button {
-                vm.shouldCapturePhoto = true
-            } label: {
-                ZStack {
-                    Circle()
-                        .fill(.clear)
-                        .strokeBorder(Color.white, lineWidth: 3.5)
-                    
-                    Circle()
-                        .foregroundStyle(
-                            .radialGradient(
-                                colors: [.white, Color(white: 0.5)],
-                                center: .center,
-                                startRadius: -10,
-                                endRadius: 35
+            HStack {
+                Spacer()
+                
+                Button {
+                    vm.shouldCapturePhoto = true
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(.clear)
+                            .strokeBorder(Color.white, lineWidth: 3.5)
+                        
+                        Circle()
+                            .foregroundStyle(
+                                .radialGradient(
+                                    colors: [.white, Color(white: 0.5)],
+                                    center: .center,
+                                    startRadius: -10,
+                                    endRadius: 35
+                                )
                             )
-                        )
-                        .padding(8)
+                            .padding(8)
+                    }
+                    .frame(width: 70, height: 70)
                 }
-                .frame(width: 70, height: 70)
+                .padding(.vertical, 36)
+                
+                Spacer()
             }
-            .padding(.vertical, 36)
+            .overlay(alignment: .trailing) {
+                Button {
+                    showDemoImagePicker = true
+                } label: {
+                    Image(systemName: "photo")
+                        .imageScale(.large)
+                        .foregroundStyle(.white)
+                        .padding()
+                }
+            }
         }
         .ignoresSafeArea(edges: .top)
         .onChange(of: vm.capturedPhoto) { _, capturedPhoto in
@@ -82,14 +90,47 @@ struct ContentView: View {
                 let response = try await session.translate(extractedText)
                 getResult(text: response.targetText)
             } catch {
-                assertionFailure(error.localizedDescription)
+                print(error.localizedDescription)
+                getResult(text: extractedText)
             }
-        }
-        .onAppear {
-            vm.capturedPhoto = .init(image: .init(named: "test2")!)
         }
         .fullScreenCover(item: $result) { result in
             SafeView(ingredients: result.ingredients)
+        }
+        .sheet(isPresented: $showDemoImagePicker) {
+            VStack {
+                TabView(selection: $selectedIndex) {
+                    ForEach(1...5, id: \.self) { id in
+                        Rectangle()
+                            .foregroundStyle(.clear)
+                            .overlay(alignment: .top) {
+                                Image("test\(id)")
+                                    .resizable()
+                                    .scaledToFill()
+                            }
+                            .clipShape(.rect(cornerRadius: 24))
+                            .padding()
+                            .padding(.bottom, 36)
+                            .tag(id)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .scrollContentBackground(.hidden)
+                
+                Button {
+                    showDemoImagePicker = false
+                    vm.capturedPhoto = .init(image: UIImage(named: "test\(selectedIndex)")!)
+                } label: {
+                    Text("Select")
+                        .font(.headline)
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                }
+                .padding(.horizontal)
+            }
         }
     }
     

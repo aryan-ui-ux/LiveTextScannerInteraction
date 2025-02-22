@@ -9,12 +9,17 @@ import SwiftUI
 
 struct SafeView: View {
     
+    enum SafetyState {
+        case safe
+        case unsafe
+        case notSure
+    }
     @Environment(\.dismiss) var dismiss
     let preference: Preference
     @State var whitelistedIngredients: [Ingredient] = []
     @State var blacklistedIngredients: [Ingredient] = []
     @State var unclassifiedIngredients: [String] = []
-    @State var isSafe: Bool?
+    @State var state: SafetyState? = nil
     @State var showDetailView: Bool = false
     
     let ingredients: [String]
@@ -26,27 +31,52 @@ struct SafeView: View {
     
     var body: some View {
         ZStack {
-            if let isSafe {
-                if isSafe {
-                    SafeBackgroundView()
-                        .ignoresSafeArea()
-                } else {
-                    NotSafeBackgroundView()
-                        .ignoresSafeArea()
+            if let state {
+                switch state {
+                    case .safe:
+                        SafeBackgroundView()
+                            .ignoresSafeArea()
+                    case .unsafe:
+                        NotSafeBackgroundView()
+                            .ignoresSafeArea()
+                    case .notSure:
+                        UnsureBackgroundView()
+                            .ignoresSafeArea()
                 }
                 VStack {
                     Spacer()
                 
                     VStack(spacing: .zero) {
-                        Image(isSafe ? "safe" : "notsafe")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 271)
+                        Group {
+                            switch state {
+                                case .safe:
+                                    Image("safe")
+                                        .resizable()
+                                case .unsafe:
+                                    Image("notsafe")
+                                        .resizable()
+                                case .notSure:
+                                    Image("unsure")
+                                        .resizable()
+                            }
+                        }
+                        .scaledToFill()
+                        .frame(height: 271)
                         
-                        Text(isSafe ? preference.title : "Not \(preference.title)")
-                            .font(.largeTitle)
-                            .fontWeight(.semibold)
-                            .fontDesign(.rounded)
+                        Group {
+                            switch state {
+                                case .safe:
+                                    Text(preference.title)
+                                case .unsafe:
+                                    Text("Not \(preference.title)")
+                                case .notSure:
+                                    Text("Sorry, something went wrong")
+                            }
+                        }
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .fontDesign(.rounded)
+                        .multilineTextAlignment(.center)
                         
                         if !blacklistedIngredients.isEmpty {
                             Text(ListFormatter.localizedString(byJoining: blacklistedIngredients.map { $0.name }))
@@ -99,10 +129,16 @@ struct SafeView: View {
             blacklistedIngredients = result.blacklisted
             unclassifiedIngredients = result.unclassified
             
-            isSafe = result.blacklisted.isEmpty
+            if result.blacklisted.isEmpty && result.whitelisted.isEmpty {
+                state = .notSure
+            } else if result.blacklisted.isEmpty {
+                state = .safe
+            } else {
+                state = .unsafe
+            }
         }
         .sheet(isPresented: $showDetailView) {
-            IngredientsListView(whitelistedIngredients: $whitelistedIngredients, blacklistedIngredients: $blacklistedIngredients, unclassifiedIngredients: $unclassifiedIngredients)
+            IngredientsListView(state: state, whitelistedIngredients: $whitelistedIngredients, blacklistedIngredients: $blacklistedIngredients, unclassifiedIngredients: $unclassifiedIngredients)
             .environment(\.colorScheme, .dark)
         }
     }
@@ -111,6 +147,7 @@ struct SafeView: View {
 
 struct IngredientsListView: View {
     @Environment(\.dismiss) private var dismiss
+    let state: SafeView.SafetyState?
     @Binding var whitelistedIngredients: [Ingredient]
     @Binding var blacklistedIngredients: [Ingredient]
     @Binding var unclassifiedIngredients: [String]
@@ -212,12 +249,16 @@ struct IngredientsListView: View {
                 }
             }
             .background {
-                if blacklistedIngredients.isEmpty {
-                    SafeBackgroundView()
-                        .ignoresSafeArea()
-                } else {
-                    NotSafeBackgroundView()
-                        .ignoresSafeArea()
+                switch state {
+                    case .safe:
+                        SafeBackgroundView()
+                            .ignoresSafeArea()
+                    case .unsafe:
+                        NotSafeBackgroundView()
+                            .ignoresSafeArea()
+                    default:
+                        UnsureBackgroundView()
+                            .ignoresSafeArea()
                 }
             }
             .navigationTitle("Detected Ingredients")
