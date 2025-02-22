@@ -18,7 +18,7 @@ struct ContentView: View {
     }
     
     @EnvironmentObject var vm: AppViewModel
-    @State private var ingredients: [String]? = nil
+    @State private var extractedText: String = ""
     @State private var result: ScanResult? = nil
     
     @State private var configuration: TranslationSession.Configuration?
@@ -68,28 +68,22 @@ struct ContentView: View {
                 return
             }
             
-            capturedPhoto.image.extractIngredients() { languageCode, ingredients in
-                self.ingredients = ingredients
+            capturedPhoto.image.extractText { languageCode, text in
+                self.extractedText = text ?? ""
                 if let languageCode, languageCode != "en" {
                     self.configuration = .init(source: .init(identifier: languageCode), target: .init(languageCode: .english))
                 } else {
-                    DispatchQueue.main.async {
-                        self.result = .init(ingredients: ingredients)
-                    }
+                    getResult(text: text ?? "")
                 }
             }
         }
         .translationTask(configuration) { session in
-            var newIngredients: [String] = []
-            for ingredient in ingredients ?? [] {
-                do {
-                    let response = try await session.translate(ingredient)
-                    newIngredients.append(response.targetText)
-                } catch {
-                    assertionFailure(error.localizedDescription)
-                }
+            do {
+                let response = try await session.translate(extractedText)
+                getResult(text: response.targetText)
+            } catch {
+                assertionFailure(error.localizedDescription)
             }
-            self.result = .init(ingredients: newIngredients)
         }
         .onAppear {
             vm.capturedPhoto = .init(image: .init(named: "test4")!)
@@ -97,5 +91,39 @@ struct ContentView: View {
         .fullScreenCover(item: $result) { result in
             SafeView(ingredients: result.ingredients)
         }
+    }
+    
+    func getResult(text: String) {
+        var paragraphs = text
+            .components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        
+        
+        if let index = paragraphs.firstIndex(where: { $0.localizedCaseInsensitiveContains("ingredient") }) {
+            paragraphs.removeFirst(index)
+            // We need to add common next section words becasue "." can also be used for numeric value. This is more deterministic.
+            if let endIndex = paragraphs.firstIndex(where: { $0.contains("Nutritional") || $0.contains("Distributed") || $0.contains("EXPIRY")
+            })  {
+                    paragraphs = Array(paragraphs.prefix(endIndex + 1))
+            } else if let postEndIndex = paragraphs.firstIndex(where: { !$0.contains(",") }) {
+                // Edge case: If it can't find any next section starting words use all the words.
+                if postEndIndex != 0 {
+                    paragraphs = Array(paragraphs.prefix(postEndIndex))
+                }
+            }
+        }
+
+        
+        let ingredients = paragraphs
+            .joined(separator: " ")
+            .replacingOccurrences(of: ".", with: ",")
+            .replacingOccurrences(of: "  ", with: " ")
+            .components(separatedBy: ",")
+            .map {
+                $0.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters)
+            }
+        
+        self.result = .init(ingredients: ingredients)
     }
 }

@@ -14,73 +14,17 @@ import Combine
 import NaturalLanguage
 import Translation
 
-struct TokenView: View {
-    let token: String
-    let classification: IngredientType
-    let onSave: () -> Void
-    @State private var showingSaveConfirmation = false
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(token)
-                .lineLimit(1)
-                .truncationMode(.tail)
-            
-            Text(classification.rawValue.capitalized)
-                .font(.caption)
-                .foregroundColor(getClassificationColor())
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(getClassificationColor().opacity(0.1))
-        .cornerRadius(8)
-        .overlay {
-            if showingSaveConfirmation {
-                Text("Saved!")
-                    .font(.caption)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.green)
-                    .cornerRadius(4)
-                    .offset(y: 24)
-            }
-        }
-    }
-    
-    private func getClassificationColor() -> Color {
-        switch classification {
-        case .vegan:
-            return .green
-        case .vegetarian:
-            return .blue
-        case .animal:
-            return .red
-        case .pescatarian:
-            return .cyan
-        case .eggetarian:
-            return .orange
-        case .both:
-            return .yellow
-        }
-    }
-}
-
-
-
-
 extension UIImage {
     
-    func extractIngredients(completion: @escaping (_ languageCode: String?, _ ingredients: [String]) -> Void) {
+    func extractText(completion: @escaping (_ languageCode: String?, _ text: String?) -> Void) {
         guard let cgImage = cgImage else {
-            completion(nil, [])
+            completion(nil, nil)
             return
         }
         
         let request = VNRecognizeTextRequest { request, error in
             guard error == nil else {
-                completion(nil, [])
+                completion(nil, nil)
                 return
             }
             
@@ -93,42 +37,11 @@ extension UIImage {
                 }
             }
             
-            var paragraphs = fullText
-                .components(separatedBy: .newlines)
-                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                .filter { !$0.isEmpty }
-            
-            
-            if let index = paragraphs.firstIndex(where: { $0.localizedCaseInsensitiveContains("ingredient") }) {
-                paragraphs.removeFirst(index)
-                // We need to add common next section words becasue "." can also be used for numeric value. This is more deterministic.
-                if let endIndex = paragraphs.firstIndex(where: { $0.contains("Nutritional") || $0.contains("Distributed") || $0.contains("EXPIRY")
-                })  {
-                        paragraphs = Array(paragraphs.prefix(endIndex + 1))
-                } else if let postEndIndex = paragraphs.firstIndex(where: { !$0.contains(",") }) {
-                    // Edge case: If it can't find any next section starting words use all the words.
-                    if postEndIndex != 0 {
-                        paragraphs = Array(paragraphs.prefix(postEndIndex))
-                    }
-                }
-            }
-
-            
-            let ingredients = paragraphs
-                .joined(separator: " ")
-                .replacingOccurrences(of: ".", with: ",")
-                .replacingOccurrences(of: "  ", with: " ")
-                .components(separatedBy: ",")
-                .map {
-                    $0.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters)
-                }
-            
             let tagger = NLTagger(tagSchemes: [.language])
-            tagger.string = ingredients.joined(separator: ", ")
+            tagger.string = fullText
             
             let languageCode = tagger.dominantLanguage?.rawValue
-            
-            completion(languageCode, ingredients)
+            completion(languageCode, fullText)
         }
         
         // Configure the request for best accuracy.
@@ -140,7 +53,7 @@ extension UIImage {
             do {
                 try requestHandler.perform([request])
             } catch {
-                completion(nil, [])
+                completion(nil, nil)
             }
         }
     }
