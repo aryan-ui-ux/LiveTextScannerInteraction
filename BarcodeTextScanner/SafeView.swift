@@ -213,7 +213,8 @@ struct IngredientsListView: View {
                                     Image(systemName: "exclamationmark.triangle.fill")
                                         .font(.body)
                                 }
-                                
+                                .padding()
+
                                 if ingredient != notSureIngredients.last {
                                     Rectangle()
                                         .frame(height: 1)
