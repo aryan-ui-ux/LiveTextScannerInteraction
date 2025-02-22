@@ -90,18 +90,23 @@ struct SafeView: View {
                     Spacer()
                     
                     HStack {
-                        Button {
-                            showDetailView = true
-                        } label: {
-                            Circle()
-                                .frame(height: 50)
-                                .aspectRatio(1, contentMode: .fit)
-                                .foregroundStyle(Color.black.opacity(0.1))
-                                .overlay {
-                                    Image(systemName: "list.bullet.rectangle.portrait")
-                                        .font(.headline)
-                                        .foregroundStyle(.white)
+                        switch state {
+                            case .safe, .unsafe:
+                                Button {
+                                    showDetailView = true
+                                } label: {
+                                    Circle()
+                                        .frame(height: 50)
+                                        .aspectRatio(1, contentMode: .fit)
+                                        .foregroundStyle(Color.black.opacity(0.1))
+                                        .overlay {
+                                            Image(systemName: "list.bullet.rectangle.portrait")
+                                                .font(.headline)
+                                                .foregroundStyle(.white)
+                                        }
                                 }
+                            case .notSure:
+                                EmptyView()
                         }
                         
                         Button {
