@@ -44,12 +44,10 @@ struct ContentView: View {
                         
                         Circle()
                             .foregroundStyle(
-                                .radialGradient(
-                                    colors: [.white, Color(white: 0.5)],
-                                    center: .center,
-                                    startRadius: -10,
-                                    endRadius: 35
-                                )
+                                .linearGradient(.init(colors: [
+                                    .init(red: 159/255, green: 159/255, blue: 159/255),
+                                    Color.white
+                                ]), startPoint: .top, endPoint: .bottom)
                             )
                             .padding(8)
                     }
