@@ -11,6 +11,8 @@ import VisionKit
 import Vision
 import CoreData
 import Combine
+import NaturalLanguage
+import Translation
 
 struct TokenView: View {
     let token: String
@@ -70,15 +72,15 @@ struct TokenView: View {
 
 extension UIImage {
     
-    func extractIngredients(completion: @escaping ([String]) -> Void) {
+    func extractIngredients(completion: @escaping (_ languageCode: String?, _ ingredients: [String]) -> Void) {
         guard let cgImage = cgImage else {
-            completion([])
+            completion(nil, [])
             return
         }
         
         let request = VNRecognizeTextRequest { request, error in
             guard error == nil else {
-                completion([])
+                completion(nil, [])
                 return
             }
             
@@ -121,7 +123,12 @@ extension UIImage {
                     $0.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters)
                 }
             
-            completion(ingredients)
+            let tagger = NLTagger(tagSchemes: [.language])
+            tagger.string = ingredients.joined(separator: ", ")
+            
+            let languageCode = tagger.dominantLanguage?.rawValue
+            
+            completion(languageCode, ingredients)
         }
         
         // Configure the request for best accuracy.
@@ -133,7 +140,7 @@ extension UIImage {
             do {
                 try requestHandler.perform([request])
             } catch {
-                completion([])
+                completion(nil, [])
             }
         }
     }

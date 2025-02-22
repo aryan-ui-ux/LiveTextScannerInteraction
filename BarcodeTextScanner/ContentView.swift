@@ -8,6 +8,7 @@
 import PhotosUI
 import SwiftUI
 import VisionKit
+import Translation
 
 struct ContentView: View {
     
@@ -17,7 +18,10 @@ struct ContentView: View {
     }
     
     @EnvironmentObject var vm: AppViewModel
+    @State private var ingredients: [String]? = nil
     @State private var result: ScanResult? = nil
+    
+    @State private var configuration: TranslationSession.Configuration?
     
     var body: some View {
         mainView
@@ -64,14 +68,31 @@ struct ContentView: View {
                 return
             }
             
-            capturedPhoto.image.extractIngredients() { ingredients in                
-                DispatchQueue.main.async {
-                    self.result = .init(ingredients: ingredients)
+            capturedPhoto.image.extractIngredients() { languageCode, ingredients in
+                self.ingredients = ingredients
+                if let languageCode, languageCode != "en" {
+                    self.configuration = .init(source: .init(identifier: languageCode), target: .init(languageCode: .english))
+                } else {
+                    DispatchQueue.main.async {
+                        self.result = .init(ingredients: ingredients)
+                    }
                 }
             }
         }
+        .translationTask(configuration) { session in
+            var newIngredients: [String] = []
+            for ingredient in ingredients ?? [] {
+                do {
+                    let response = try await session.translate(ingredient)
+                    newIngredients.append(response.targetText)
+                } catch {
+                    assertionFailure(error.localizedDescription)
+                }
+            }
+            self.result = .init(ingredients: newIngredients)
+        }
         .onAppear {
-            vm.capturedPhoto = .init(image: .init(named: "test3")!)
+            vm.capturedPhoto = .init(image: .init(named: "test4")!)
         }
         .fullScreenCover(item: $result) { result in
             SafeView(ingredients: result.ingredients)
