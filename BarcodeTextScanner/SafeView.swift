@@ -131,9 +131,9 @@ struct SafeView: View {
             notSureIngredients = result.notSure
             unclassifiedIngredients = result.unclassified
             
-            if result.blacklisted.isEmpty && result.whitelisted.isEmpty {
+            if result.blacklisted.isEmpty && result.whitelisted.isEmpty && result.notSure.isEmpty {
                 state = .notSure
-            } else if result.blacklisted.isEmpty {
+            } else if result.blacklisted.isEmpty && result.notSure.isEmpty {
                 state = .safe
             } else {
                 state = .unsafe
