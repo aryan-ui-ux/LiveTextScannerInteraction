@@ -228,35 +228,36 @@ struct IngredientsListView: View {
                     }
                     .padding(.horizontal)
                 }
-                
-                if !unclassifiedIngredients.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Unknown ingredients")
-                            .textCase(.uppercase)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal)
+
+                // TODO: Improve unclassified cleanup
+                // if !unclassifiedIngredients.isEmpty {
+                //     VStack(alignment: .leading, spacing: 8) {
+                //         Text("Unknown ingredients")
+                //             .textCase(.uppercase)
+                //             .font(.caption)
+                //             .foregroundStyle(.secondary)
+                //             .padding(.horizontal)
                         
-                        LazyVStack(spacing: 0) {
-                            ForEach(unclassifiedIngredients, id: \.self) { ingredient in
-                                Text(ingredient)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .multilineTextAlignment(.leading)
-                                    .padding()
+                //         LazyVStack(spacing: 0) {
+                //             ForEach(unclassifiedIngredients, id: \.self) { ingredient in
+                //                 Text(ingredient)
+                //                     .frame(maxWidth: .infinity, alignment: .leading)
+                //                     .multilineTextAlignment(.leading)
+                //                     .padding()
                                 
-                                if ingredient != unclassifiedIngredients.last {
-                                    Rectangle()
-                                        .frame(height: 1)
-                                        .foregroundStyle(Color.white.opacity(0.2))
-                                        .padding(.leading)
-                                }
-                            }
-                        }
-                        .background(Color.black.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: 16))
-                    }
-                    .padding(.horizontal)
-                }
+                //                 if ingredient != unclassifiedIngredients.last {
+                //                     Rectangle()
+                //                         .frame(height: 1)
+                //                         .foregroundStyle(Color.white.opacity(0.2))
+                //                         .padding(.leading)
+                //                 }
+                //             }
+                //         }
+                //         .background(Color.black.opacity(0.2))
+                //         .clipShape(.rect(cornerRadius: 16))
+                //     }
+                //     .padding(.horizontal)
+                // }
                 
                 if !whitelistedIngredients.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
