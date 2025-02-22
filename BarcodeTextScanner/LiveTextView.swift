@@ -99,12 +99,18 @@ extension UIImage {
             
             if let index = paragraphs.firstIndex(where: { $0.localizedCaseInsensitiveContains("ingredient") }) {
                 paragraphs.removeFirst(index)
-                if let endIndex = paragraphs.firstIndex(where: { $0.contains(".") }) {
-                    paragraphs = Array(paragraphs.prefix(endIndex + 1))
+                // We need to add common next section words becasue "." can also be used for numeric value. This is more deterministic.
+                if let endIndex = paragraphs.firstIndex(where: { $0.contains("Nutritional") || $0.contains("Distributed") || $0.contains("EXPIRY")
+                })  {
+                        paragraphs = Array(paragraphs.prefix(endIndex + 1))
                 } else if let postEndIndex = paragraphs.firstIndex(where: { !$0.contains(",") }) {
-                    paragraphs = Array(paragraphs.prefix(postEndIndex))
+                    // Edge case: If it can't find any next section starting words use all the words.
+                    if postEndIndex != 0 {
+                        paragraphs = Array(paragraphs.prefix(postEndIndex))
+                    }
                 }
             }
+
             
             let ingredients = paragraphs
                 .joined(separator: " ")
