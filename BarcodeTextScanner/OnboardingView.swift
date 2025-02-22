@@ -51,30 +51,29 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                SafeBackgroundView()
-                    .ignoresSafeArea()
-                
                 VStack {
-                    LottieView(name: "Onboarding (Safe)", animationSpeed: 2)
+                    LoopingVideoView()
                         .aspectRatio(18/29, contentMode: .fit)
+                        .cornerRadius(24)
                     
                     Spacer()
                     
                     Text("Scan food labels instantly and check if they're safe for you")
                         .font(.title3)
+                        .fontWeight(.semibold)
+                        .fontDesign(.rounded)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.white)
                     
                     NavigationLink {
                         PreferenceView()
                     } label: {
                         Text("Next")
                             .font(.headline)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color(.systemBackground))
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity)
                             .frame(height: 50)
-                            .background(Color.white)
+                            .background(Color(.label))
                             .clipShape(Capsule())
                     }
                 }

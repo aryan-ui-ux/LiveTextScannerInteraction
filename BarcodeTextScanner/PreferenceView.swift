@@ -15,31 +15,31 @@ enum Preference: String, CaseIterable {
     
     var title: String {
         switch self {
-        case .vegan:
-            return "Vegan"
-        case .vegetarian:
-            return "Vegetarian"
-        case .pescatorian:
-            return "Pescatorian"
-        case .eggetarian:
-            return "Eggetarian"
+            case .vegan:
+                return "Vegan"
+            case .vegetarian:
+                return "Vegetarian"
+            case .pescatorian:
+                return "Pescatorian"
+            case .eggetarian:
+                return "Eggetarian"
         }
     }
     
     
     var blacklistedIngredientGroups: [String] {
         switch self {
-        case .vegan:
-            return ["Milk and milk products", "Animal foods", "Aquatic foods", "Eggs"]
-        case .vegetarian:
-            return ["Animal foods", "Aquatic foods", "Eggs"]
-        case .pescatorian:
-            return ["Animal foods"]
-        case .eggetarian:
-            return ["Animal foods", "Aquatic foods"]
+            case .vegan:
+                return ["Milk and milk products", "Animal foods", "Aquatic foods", "Eggs"]
+            case .vegetarian:
+                return ["Animal foods", "Aquatic foods", "Eggs"]
+            case .pescatorian:
+                return ["Animal foods"]
+            case .eggetarian:
+                return ["Animal foods", "Aquatic foods"]
         }
     }
-    }
+}
     
 struct PreferenceView: View {
     
@@ -125,6 +125,5 @@ struct PreferenceView: View {
         }
         .toolbarVisibility(.hidden)
     }
-
-    }
+}
     

@@ -13,34 +13,14 @@ struct ContentView: View {
     
     struct ScanResult: Identifiable {
         let id: UUID = .init()
-        let rawText: String
         let ingredients: [String]
-        let classifiedIngredients: (
-            whitelisted: [Ingredient],
-            blacklisted: [Ingredient],
-            vegan: [Ingredient],
-            nonVegan: [Ingredient],
-            unclassified: [Ingredient]
-        )
     }
     
     @EnvironmentObject var vm: AppViewModel
     @State private var result: ScanResult? = nil
-    private let ingredientStore = IngredientStore.shared
     
     var body: some View {
-        switch vm.dataScannerAccessStatus {
-            case .scannerAvailable:
-                mainView
-            case .cameraNotAvailable:
-                Text("Your device doesn't have a camera")
-            case .scannerNotAvailable:
-                Text("Your device doesn't have support for scanning barcode with this app")
-            case .cameraAccessNotGranted:
-                Text("Please provide access to the camera in settings")
-            case .notDetermined:
-                Text("Requesting camera access")
-        }
+        mainView
     }
     
     @ViewBuilder
@@ -83,34 +63,18 @@ struct ContentView: View {
             guard let capturedPhoto else {
                 return
             }
-            Task { @MainActor in
-                let decoder = LiveTextDecoder(image: capturedPhoto.image)
-                let (rawText, ingredients) = await decoder.analyse()
-                
-                // Get user preference
-                let preference = Preference(rawValue: UserDefaults.standard.string(forKey: "preference") ?? "") ?? .vegan
-                
-                // Classify ingredients
-                let classifiedIngredients = ingredientStore.getIngredients(
-                    from: ingredients,
-                    for: preference
-                )
-                
-                self.result = .init(
-                    rawText: rawText,
-                    ingredients: ingredients,
-                    classifiedIngredients: classifiedIngredients
-                )
+            
+            capturedPhoto.image.extractIngredients() { ingredients in                
+                DispatchQueue.main.async {
+                    self.result = .init(ingredients: ingredients)
+                }
             }
         }
+        .onAppear {
+            vm.capturedPhoto = .init(image: .init(named: "test3")!)
+        }
         .fullScreenCover(item: $result) { result in
-            VStack {
-                RawTextView(text: result.rawText)
-                SafeView(
-                    ingredients: result.ingredients,
-                    classifiedIngredients: result.classifiedIngredients
-                )
-            }
+            SafeView(ingredients: result.ingredients)
         }
     }
 }
