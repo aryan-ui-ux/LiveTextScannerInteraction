@@ -18,22 +18,3 @@ struct BarcodeTextScannerApp: App {
         }
     }
 }
-
-struct HomeView: View {
-    @AppStorage("preference") private var preference: String?
-    @StateObject private var vm = AppViewModel()
-    
-    var body: some View {
-        if preference != nil {
-            ContentView()
-                .environmentObject(vm)
-                .onAppear {
-                    Task {
-                        await vm.requestDataScannerAccessStatus()
-                    }
-                }
-        } else {
-            OnboardingView()
-        }
-    }
-}

@@ -34,7 +34,6 @@ final class AppViewModel: ObservableObject {
     
     @Published var shouldCapturePhoto = false
     @Published var capturedPhoto: IdentifiableImage? = nil
-    @Published var selectedPhotoPickerItem: PhotosPickerItem? = nil
     
     var recognizedDataType: DataScannerViewController.RecognizedDataType {
         scanType == .barcode ? .barcode() : .text(textContentType: textContentType)

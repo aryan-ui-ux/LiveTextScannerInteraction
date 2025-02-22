@@ -5,14 +5,10 @@
 //  Created by Alfian Losari on 15/07/22.
 //
 
-import Foundation
 import SwiftUI
 import VisionKit
 import Vision
-import CoreData
-import Combine
 import NaturalLanguage
-import Translation
 
 extension UIImage {
     

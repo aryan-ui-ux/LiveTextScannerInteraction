@@ -5,7 +5,7 @@
 //  Created by Mustafa Yusuf on 18/02/25.
 //
 
-import Foundation
+import NaturalLanguage
 
 enum IngredientType: String, Codable {
     case vegan
@@ -25,10 +25,10 @@ struct Ingredient: Codable, Identifiable, Hashable {
     let wikipediaId: String?
     let foodGroup: String?
     let foodSubgroup: String?
-    let foodType: String
+    let foodType: String?
     let category: String?
     let ncbiTaxonomyId: Int?
-    let publicId: String
+    let publicId: String?
     var ingredientType: IngredientType?
 }
 
@@ -79,21 +79,34 @@ class IngredientStore {
         var whitelisted: [Ingredient] = []
         var blacklisted: [Ingredient] = []
         var unclassified: [String] = []
-                
-        Set(items).forEach { item in
-            let lowercasedItem = item.lowercased()
+        
+        func didFindAndAddIngredient(for text: String) -> Bool {
+            let lowercasedItem = text.lowercased()
             if let index = map[lowercasedItem] ?? map[singularizeWord(lowercasedItem)] {
-                
                 let ingredient = ingredients[index]
                 if !addedIds.contains(ingredient.id) {
+                    addedIds.append(ingredient.id)
                     if preference.blacklistedIngredientGroups.contains(ingredient.foodGroup ?? "") {
                         blacklisted.append(ingredient)
                     } else {
                         whitelisted.append(ingredient)
                     }
                 }
-            } else if !addedItems.contains(item) {
-                unclassified.append(item)
+                return true
+            }
+            return false
+        }
+        
+        items.forEach { item in
+            if !didFindAndAddIngredient(for: item) {
+                item.split(separator: " ")
+                    .forEach { substring in
+                        let substring = String(substring)
+                        if !didFindAndAddIngredient(for: substring), !addedItems.contains(substring) {
+                            addedItems.append(substring)
+                            unclassified.append(substring)
+                        }
+                    }
             }
         }
         

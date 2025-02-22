@@ -118,70 +118,98 @@ struct IngredientsListView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(blacklistedIngredients) { ingredient in
-                        HStack {
-                            Text(ingredient.name)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .multilineTextAlignment(.leading)
-                                .font(.body)
-                            
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .font(.body)
-                        }
-                        .padding()
-                     
-                        if ingredient != blacklistedIngredients.last {
-                            Rectangle()
-                                .frame(height: 1)
-                                .foregroundStyle(Color.white.opacity(0.2))
-                                .padding(.leading)
-                        }
-                    }
-                }
-                .background(Color.black.opacity(0.2))
-                .clipShape(.rect(cornerRadius: 16))
-                .padding(16)
-                
-                LazyVStack(spacing: 0) {
-                    ForEach(unclassifiedIngredients, id: \.self) { ingredient in
-                        Text(ingredient)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .multilineTextAlignment(.leading)
-                            .padding()
+                if !blacklistedIngredients.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Unsafe ingredients")
+                            .textCase(.uppercase)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
                         
-                        if ingredient != unclassifiedIngredients.last {
-                            Rectangle()
-                                .frame(height: 1)
-                                .foregroundStyle(Color.white.opacity(0.2))
-                                .padding(.leading)
+                        LazyVStack(spacing: 0) {
+                            ForEach(blacklistedIngredients) { ingredient in
+                                HStack {
+                                    Text(ingredient.name)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .multilineTextAlignment(.leading)
+                                        .font(.body)
+                                    
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .font(.body)
+                                }
+                                .padding()
+                                
+                                if ingredient != blacklistedIngredients.last {
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundStyle(Color.white.opacity(0.2))
+                                        .padding(.leading)
+                                }
+                            }
                         }
+                        .background(Color.black.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: 16))
                     }
+                    .padding(.horizontal)
                 }
-                .background(Color.black.opacity(0.2))
-                .clipShape(.rect(cornerRadius: 16))
-                .padding(16)
-
                 
-                LazyVStack(spacing: 0) {
-                    ForEach(whitelistedIngredients) { ingredient in
-                        Text(ingredient.name)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .multilineTextAlignment(.leading)
-                            .padding()
+                if !unclassifiedIngredients.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Unknown ingredients")
+                            .textCase(.uppercase)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
                         
-                        if ingredient != whitelistedIngredients.last {
-                            Rectangle()
-                                .frame(height: 1)
-                                .foregroundStyle(Color.white.opacity(0.2))
-                                .padding(.leading)
+                        LazyVStack(spacing: 0) {
+                            ForEach(unclassifiedIngredients, id: \.self) { ingredient in
+                                Text(ingredient)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .multilineTextAlignment(.leading)
+                                    .padding()
+                                
+                                if ingredient != unclassifiedIngredients.last {
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundStyle(Color.white.opacity(0.2))
+                                        .padding(.leading)
+                                }
+                            }
                         }
+                        .background(Color.black.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: 16))
                     }
+                    .padding(.horizontal)
                 }
-                .background(Color.black.opacity(0.2))
-                .clipShape(.rect(cornerRadius: 16))
-                .padding(16)
 
+                if !whitelistedIngredients.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Safe ingredients")
+                            .textCase(.uppercase)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal)
+                        
+                        LazyVStack(spacing: 0) {
+                            ForEach(whitelistedIngredients) { ingredient in
+                                Text(ingredient.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .multilineTextAlignment(.leading)
+                                    .padding()
+                                
+                                if ingredient != whitelistedIngredients.last {
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundStyle(Color.white.opacity(0.2))
+                                        .padding(.leading)
+                                }
+                            }
+                        }
+                        .background(Color.black.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: 16))
+                    }
+                    .padding(.horizontal)
+                }
             }
             .background {
                 if blacklistedIngredients.isEmpty {

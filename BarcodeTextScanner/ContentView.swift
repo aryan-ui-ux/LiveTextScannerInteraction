@@ -86,7 +86,7 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            vm.capturedPhoto = .init(image: .init(named: "test4")!)
+            vm.capturedPhoto = .init(image: .init(named: "test2")!)
         }
         .fullScreenCover(item: $result) { result in
             SafeView(ingredients: result.ingredients)
@@ -121,8 +121,10 @@ struct ContentView: View {
             .replacingOccurrences(of: "  ", with: " ")
             .components(separatedBy: ",")
             .map {
-                $0.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters)
+                $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .trimmingCharacters(in: .punctuationCharacters)
             }
+            .filter { !$0.isEmpty }
         
         self.result = .init(ingredients: ingredients)
     }
