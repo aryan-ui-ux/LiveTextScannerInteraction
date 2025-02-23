@@ -52,8 +52,8 @@ enum Preference: String, CaseIterable {
     
 struct PreferenceView: View {
     
-    @State private var selectedPreference: Preference? = nil
-    @AppStorage("preference") private var preference: String?
+    @State var selectedPreference: Preference? = nil
+    @AppStorage("preference") var preference: String?
     
     var body: some View {
         ZStack {
@@ -81,7 +81,6 @@ struct PreferenceView: View {
                                     .foregroundStyle(preference == selectedPreference ? .safeGreen : .white)
                                 Spacer()
                                 
-                                // Reserve space with the same width
                                 Group {
                                     if preference == selectedPreference {
                                         Image(systemName: "checkmark")

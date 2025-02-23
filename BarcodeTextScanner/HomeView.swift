@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    @AppStorage("preference") private var preference: String?
-    @StateObject private var vm: AppViewModel = .shared
+    @AppStorage("preference") var preference: String?
+    @StateObject var vm: AppScannerViewModel = .shared
     
     var body: some View {
         if preference != nil {

@@ -9,7 +9,7 @@ import AVKit
 import SwiftUI
 
 struct LoopingVideoView: View {
-    private let player: AVPlayer
+    let player: AVPlayer
     
     init() {
         let url = Bundle.main.url(forResource: "onboarding", withExtension: "mp4")!
@@ -22,12 +22,7 @@ struct LoopingVideoView: View {
         VideoPlayer(player: player)
             .edgesIgnoringSafeArea(.all)
             .onAppear {
-                // Observe when video ends and restart
-                NotificationCenter.default.addObserver(
-                    forName: .AVPlayerItemDidPlayToEndTime,
-                    object: player.currentItem,
-                    queue: .main
-                ) { _ in
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
                     self.player.seek(to: .zero)
                     self.player.play()
                 }

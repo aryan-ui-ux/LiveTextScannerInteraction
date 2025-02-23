@@ -17,14 +17,14 @@ struct ContentView: View {
         let ingredients: [String]
     }
     
-    @EnvironmentObject var vm: AppViewModel
-    @State private var extractedText: String = ""
-    @State private var result: ScanResult? = nil
-    @State private var showDemoImagePicker: Bool = false
+    @EnvironmentObject var vm: AppScannerViewModel
+    @State var extractedText: String = ""
+    @State var result: ScanResult? = nil
+    @State var showDemoImagePicker: Bool = false
     
-    @State private var configuration: TranslationSession.Configuration?
+    @State var configuration: TranslationSession.Configuration?
     
-    @State private var selectedIndex: Int = 1
+    @State var selectedIndex: Int = 1
     
     var body: some View {
         VStack(spacing: .zero) {
@@ -35,7 +35,7 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    vm.shouldCapturePhoto = true
+                    vm.capturePhoto = true
                 } label: {
                     ZStack {
                         Circle()
@@ -43,12 +43,7 @@ struct ContentView: View {
                             .strokeBorder(Color.white, lineWidth: 3.5)
                         
                         Circle()
-                            .foregroundStyle(
-                                .linearGradient(.init(colors: [
-                                    .init(red: 159/255, green: 159/255, blue: 159/255),
-                                    Color.white
-                                ]), startPoint: .top, endPoint: .bottom)
-                            )
+                            .foregroundStyle(.linearGradient(.init(colors: [.init(red: 159/255, green: 159/255, blue: 159/255), Color.white]), startPoint: .top, endPoint: .bottom))
                             .padding(8)
                     }
                     .frame(width: 70, height: 70)
@@ -61,25 +56,45 @@ struct ContentView: View {
                 Button {
                     showDemoImagePicker = true
                 } label: {
-                    Image(systemName: "photo")
-                        .imageScale(.large)
-                        .foregroundStyle(.white)
-                        .padding()
+                    HStack(spacing: -12) {
+                        Rectangle()
+                            .overlay {
+                                Image("test1")
+                                    .resizable()
+                                    .scaledToFill()
+                            }
+                            .clipShape(.rect(cornerRadius: 12))
+                            .rotationEffect(.degrees(-13))
+                            .frame(width: 36, height: 50)
+                        
+                        Rectangle()
+                            .overlay {
+                                Image("test2")
+                                    .resizable()
+                                    .scaledToFill()
+                            }
+                            .clipShape(.rect(cornerRadius: 12))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(Color.black, lineWidth: 3)
+                            }
+                            .rotationEffect(.degrees(6.5))
+                            .frame(width: 44, height: 58)
+                    }
+                    .padding(.horizontal)
                 }
             }
         }
         .ignoresSafeArea(edges: .top)
-        .onChange(of: vm.capturedPhoto) { _, capturedPhoto in
-            guard let capturedPhoto else {
-                return
-            }
-            
-            capturedPhoto.image.extractText { languageCode, text in
-                self.extractedText = text ?? ""
-                if let languageCode, languageCode != "en" {
-                    self.configuration = .init(source: .init(identifier: languageCode), target: .init(languageCode: .english))
-                } else {
-                    getResult(text: text ?? "")
+        .onChange(of: vm.photo) { _, capturedPhoto in
+            if let capturedPhoto {
+                capturedPhoto.image.getText { languageCode, text in
+                    self.extractedText = text ?? ""
+                    if let languageCode, languageCode != "en" {
+                        self.configuration = .init(source: .init(identifier: languageCode), target: .init(languageCode: .english))
+                    } else {
+                        getResult(text: text ?? "")
+                    }
                 }
             }
         }
@@ -94,6 +109,7 @@ struct ContentView: View {
         }
         .fullScreenCover(item: $result) { result in
             SafeView(ingredients: result.ingredients)
+                .environment(\.colorScheme, .dark)
         }
         .sheet(isPresented: $showDemoImagePicker) {
             VStack {
@@ -122,7 +138,7 @@ struct ContentView: View {
                 
                 Button {
                     showDemoImagePicker = false
-                    vm.capturedPhoto = .init(image: UIImage(named: "test\(selectedIndex)")!)
+                    vm.photo = .init(image: UIImage(named: "test\(selectedIndex)")!)
                 } label: {
                     Text("Select")
                         .font(.headline)
@@ -134,6 +150,7 @@ struct ContentView: View {
                 }
                 .padding(.horizontal)
             }
+            .environment(\.colorScheme, .dark)
         }
     }
     

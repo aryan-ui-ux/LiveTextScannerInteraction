@@ -23,12 +23,12 @@ struct CameraView: UIViewRepresentable {
 }
 
 class CameraUIView: UIView, AVCapturePhotoCaptureDelegate {
-    private let captureSession = AVCaptureSession()
-    private var photoOutput = AVCapturePhotoOutput()
-    private var previewLayer: AVCaptureVideoPreviewLayer?
-    private var captureDevice: AVCaptureDevice?
+    let captureSession = AVCaptureSession()
+    var photoOutput = AVCapturePhotoOutput()
+    var previewLayer: AVCaptureVideoPreviewLayer?
+    var captureDevice: AVCaptureDevice?
     
-    private var cancellables: [AnyCancellable] = []
+    var cancellables: [AnyCancellable] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,7 +40,7 @@ class CameraUIView: UIView, AVCapturePhotoCaptureDelegate {
         setupCaptureSession()
     }
     
-    private func setupCaptureSession() {
+    func setupCaptureSession() {
         captureSession.sessionPreset = .photo
         
         do {
@@ -66,11 +66,11 @@ class CameraUIView: UIView, AVCapturePhotoCaptureDelegate {
             
             self.startCapture()
             
-            AppViewModel.shared.$shouldCapturePhoto
+            AppScannerViewModel.shared.$capturePhoto
                 .receive(on: DispatchQueue.main)
                 .sink { value in
                     if value {
-                        AppViewModel.shared.shouldCapturePhoto = false
+                        AppScannerViewModel.shared.capturePhoto = false
                         self.capturePhoto()
                     }
                 }
@@ -85,13 +85,14 @@ class CameraUIView: UIView, AVCapturePhotoCaptureDelegate {
         self.previewLayer?.frame = bounds
     }
     
-    private func startCapture() {
+    func startCapture() {
         DispatchQueue.global(qos: .userInitiated).async {
             self.captureSession.startRunning()
         }
     }
     
     func capturePhoto() {
+        AppScannerViewModel.shared.capturePhoto = false
         photoOutput.capturePhoto(with: .init(), delegate: self)
     }
     
@@ -106,11 +107,16 @@ class CameraUIView: UIView, AVCapturePhotoCaptureDelegate {
             return
         }
         
-        AppViewModel.shared.capturedPhoto = .init(image: image)
+        AppScannerViewModel.shared.photo = .init(image: image)
     }
 }
 
 struct IdentifiableImage: Identifiable, Hashable {
-    let id = UUID()
+    let id: UUID
     let image: UIImage
+    
+    init(image: UIImage) {
+        self.id = UUID()
+        self.image = image
+    }
 }

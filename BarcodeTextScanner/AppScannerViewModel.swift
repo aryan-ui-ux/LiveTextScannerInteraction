@@ -9,7 +9,7 @@ import AVKit
 import PhotosUI
 import SwiftUI
 
-final class AppViewModel: ObservableObject {
+final class AppScannerViewModel: ObservableObject {
     
     enum AccessStatus {
         case notDetermined
@@ -18,17 +18,17 @@ final class AppViewModel: ObservableObject {
         case granted
     }
     
-    static let shared: AppViewModel = .init()
+    static let shared: AppScannerViewModel = .init()
 
     @Published var accessStatus: AccessStatus = .notDetermined
-    @Published var capturedPhoto: IdentifiableImage? = nil
-    @Published var shouldCapturePhoto: Bool = false
+    @Published var photo: IdentifiableImage? = nil
+    @Published var capturePhoto: Bool = false
     
     init() {
         setup()
     }
     
-    private func setup() {
+    func setup() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             accessStatus = .notAvailable
             return

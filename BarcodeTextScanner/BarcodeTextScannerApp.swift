@@ -7,7 +7,6 @@
 
 import SwiftUI
     
-// MARK: - App
 @main
 struct BarcodeTextScannerApp: App {
     

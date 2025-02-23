@@ -12,7 +12,7 @@ import NaturalLanguage
 
 extension UIImage {
     
-    func extractText(completion: @escaping (_ languageCode: String?, _ text: String?) -> Void) {
+    func getText(completion: @escaping (_ languageCode: String?, _ text: String?) -> Void) {
         guard let cgImage = cgImage else {
             completion(nil, nil)
             return
@@ -33,17 +33,17 @@ extension UIImage {
                 }
             }
             
+            let cleanText = fullText
+                .replacingOccurrences(of: "\n", with: " ")
             let tagger = NLTagger(tagSchemes: [.language])
-            tagger.string = fullText
+            tagger.string = String(cleanText.suffix(cleanText.count/3))
             
             let languageCode = tagger.dominantLanguage?.rawValue
             completion(languageCode, fullText)
         }
         
-        // Configure the request for best accuracy.
         request.recognitionLevel = .accurate
         
-        // Perform the request.
         let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
         DispatchQueue.global(qos: .userInitiated).async {
             do {

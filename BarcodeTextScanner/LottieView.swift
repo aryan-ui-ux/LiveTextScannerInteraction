@@ -9,27 +9,21 @@ import SwiftUI
 import Lottie
 
 struct LottieView: UIViewRepresentable {
-    let animationName: String
-    let loopMode: LottieLoopMode
-    let contentMode: UIView.ContentMode
-    let animationSpeed: Double
+    let name: String
     
-    init(name: String, loopMode: LottieLoopMode = .loop, contentMode: UIView.ContentMode = .scaleAspectFit, animationSpeed: Double = 3.0) {
-        self.animationName = name
-        self.loopMode = loopMode
-        self.contentMode = contentMode
-        self.animationSpeed = animationSpeed
+    init(name: String) {
+        self.name = name
     }
     
     func makeUIView(context: Context) -> UIView {
         let view = UIView(frame: .zero)
         let animationView = LottieAnimationView()
         
-        if let animation = LottieAnimation.named(animationName) {
+        if let animation = LottieAnimation.named(name) {
             animationView.animation = animation
-            animationView.contentMode = contentMode
-            animationView.loopMode = loopMode
-            animationView.animationSpeed = animationSpeed
+            animationView.contentMode = .scaleAspectFill
+            animationView.loopMode = .loop
+            animationView.animationSpeed = 1
             animationView.play()
             
             animationView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,12 +33,12 @@ struct LottieView: UIViewRepresentable {
                 animationView.widthAnchor.constraint(equalTo: view.widthAnchor),
                 animationView.heightAnchor.constraint(equalTo: view.heightAnchor)
             ])
-        } else {
-            assertionFailure("Animation not found: \(animationName)")
         }
         
         return view
     }
     
-    func updateUIView(_ uiView: UIView, context: Context) {}
+    func updateUIView(_ uiView: UIView, context: Context) {
+        
+    }
 }

@@ -35,8 +35,8 @@ struct Ingredient: Codable, Identifiable, Hashable {
 class IngredientStore {
     
     static let shared: IngredientStore = .init()
-    private var map: [String: Int] = [:]
-    private var ingredients: [Ingredient] = []
+    var map: [String: Int] = [:]
+    var ingredients: [Ingredient] = []
     
     // Add this property to store common words to skip
 
@@ -54,7 +54,7 @@ class IngredientStore {
         setup()
     }
     
-    private func setup() {
+    func setup() {
         guard let url = Bundle.main.url(forResource: "Food", withExtension: "json") else {
             assertionFailure()
             return
@@ -96,7 +96,6 @@ class IngredientStore {
             let lowercasedItem = text.lowercased()
             var found = false
             
-            // Try exact match first
             if let index = map[lowercasedItem] {
                 let ingredient = ingredients[index]
                 if !addedIds.contains(ingredient.id) {
@@ -113,7 +112,7 @@ class IngredientStore {
                 return true
             }
             
-            // Fuzzy search
+            /* Fuzzy search - i taken from stack overflow */
             var lastFoundIngredient: Ingredient?
             var isBlacklistedFound = false
             var isNotSureFound = false
@@ -150,7 +149,6 @@ class IngredientStore {
                 }
             }
             
-            // Add the final result to appropriate list
             if let ingredient = lastFoundIngredient, !addedIds.contains(ingredient.id) {
                 addedIds.append(ingredient.id)
                 let foodGroup = ingredient.foodGroup ?? ""
