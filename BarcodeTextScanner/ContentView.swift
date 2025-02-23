@@ -97,6 +97,12 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showDemoImagePicker) {
             VStack {
+                Text("Demo Data")
+                    .font(.headline)
+                    .fontWeight(.medium)
+                    .padding(.top, 14)
+                    .multilineTextAlignment(.center)
+                
                 TabView(selection: $selectedIndex) {
                     ForEach(1...5, id: \.self) { id in
                         Rectangle()
@@ -107,7 +113,6 @@ struct ContentView: View {
                                     .scaledToFill()
                             }
                             .clipShape(.rect(cornerRadius: 24))
-                            .padding()
                             .padding(.bottom, 36)
                             .tag(id)
                     }
