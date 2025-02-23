@@ -1,7 +1,7 @@
 {
-  "images" : [
+  "data" : [
     {
-      "filename" : "safe.pdf",
+      "filename" : "SAFE.json",
       "idiom" : "universal"
     }
   ],

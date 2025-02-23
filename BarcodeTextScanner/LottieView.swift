@@ -39,6 +39,8 @@ struct LottieView: UIViewRepresentable {
                 animationView.widthAnchor.constraint(equalTo: view.widthAnchor),
                 animationView.heightAnchor.constraint(equalTo: view.heightAnchor)
             ])
+        } else {
+            assertionFailure("Animation not found: \(animationName)")
         }
         
         return view

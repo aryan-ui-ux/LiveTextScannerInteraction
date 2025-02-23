@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Lottie
+
 
 struct SafeView: View {
     
@@ -30,6 +32,7 @@ struct SafeView: View {
         self.ingredients = ingredients
     }
     
+    
     var body: some View {
         ZStack {
             if let state {
@@ -45,45 +48,56 @@ struct SafeView: View {
                             .ignoresSafeArea()
                 }
                 VStack {
-                    Spacer()
+                    Spacer()                    
                 
                     VStack(spacing: .zero) {
-                        Group {
-                            switch state {
-                                case .safe:
-                                    Image("safe")
-                                        .resizable()
-                                case .unsafe:
-                                    Image("notsafe")
-                                        .resizable()
-                                case .notSure:
-                                    Image("unsure")
-                                        .resizable()
+                        ZStack {
+                            Group {
+                                switch state {
+                                    case .safe:
+                                        LottieView(name: "SAFE", loopMode: .loop, contentMode: .scaleToFill, animationSpeed: 1.0)
+                                    case .unsafe:
+                                        LottieView(name: "SAFE", loopMode: .loop, contentMode: .scaleToFill, animationSpeed: 1.0)
+                                        .scaleEffect(x: -1, y: -1)
+                                    case .notSure:
+                                        Image("unsure")
+                                            .resizable()
+                                            .scaledToFit()
+                                }
                             }
-                        }
-                        .scaledToFill()
-                        .frame(height: 271)
-                        
-                        Group {
-                            switch state {
-                                case .safe:
-                                    Text(preference.title)
-                                case .unsafe:
-                                    Text("Not \(preference.title)")
-                                case .notSure:
-                                    Text("Sorry, something went wrong")
-                            }
-                        }
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .fontDesign(.rounded)
-                        .multilineTextAlignment(.center)
-                        
-                        if !blacklistedIngredients.isEmpty {
-                            Text(ListFormatter.localizedString(byJoining: blacklistedIngredients.map { $0 }))
-                                .font(.body)
+                            .frame(width:
+                                    UIScreen.main.bounds.width)
+                            
+                            VStack {
+                       
+                                Group {
+                                    switch state {
+
+                                        case .safe:
+                                            Text(preference.title)
+                                                .fontWeight(.bold)
+                                        case .unsafe:
+                                            Text("Not \(preference.title)")
+                                                .fontWeight(.bold)
+                                        case .notSure:
+                                            Text("Sorry, something went wrong")
+                                                .fontWeight(.bold)
+                                    
+                                    }
+                                                if !blacklistedIngredients.isEmpty {
+                                    Text(ListFormatter.localizedString(byJoining: blacklistedIngredients.map { $0.localizedCapitalized }))
+                                        .font(.body)
+                                        .fontDesign(.rounded)
+                                        .foregroundStyle(.secondary)
+                                        .padding(.horizontal, 20)
+                                }
+                                }
+                                .font(.largeTitle)
+                                .fontWeight(.semibold)
                                 .fontDesign(.rounded)
-                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                                .offset(y: blacklistedIngredients.isEmpty ? 160 : 220)
+                            }
                         }
                     }
                     
@@ -121,8 +135,9 @@ struct SafeView: View {
                                 .clipShape(Capsule())
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding()
+                .padding(.horizontal)
             }
         }
         .onAppear {
