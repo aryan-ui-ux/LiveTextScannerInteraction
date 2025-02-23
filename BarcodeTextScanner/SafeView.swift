@@ -16,9 +16,9 @@ struct SafeView: View {
     }
     @Environment(\.dismiss) var dismiss
     let preference: Preference
-    @State var whitelistedIngredients: [Ingredient] = []
-    @State var blacklistedIngredients: [Ingredient] = []
-    @State var notSureIngredients: [Ingredient] = []
+    @State var whitelistedIngredients: [String] = []
+    @State var blacklistedIngredients: [String] = []
+    @State var notSureIngredients: [String] = []
     @State var unclassifiedIngredients: [String] = []
     @State var state: SafetyState? = nil
     @State var showDetailView: Bool = false
@@ -80,7 +80,7 @@ struct SafeView: View {
                         .multilineTextAlignment(.center)
                         
                         if !blacklistedIngredients.isEmpty {
-                            Text(ListFormatter.localizedString(byJoining: blacklistedIngredients.map { $0.name }))
+                            Text(ListFormatter.localizedString(byJoining: blacklistedIngredients.map { $0 }))
                                 .font(.body)
                                 .fontDesign(.rounded)
                                 .foregroundStyle(.secondary)
@@ -156,9 +156,9 @@ struct IngredientsListView: View {
     @Environment(\.dismiss) private var dismiss
     let preference: Preference
     let state: SafeView.SafetyState?
-    @Binding var whitelistedIngredients: [Ingredient]
-    @Binding var blacklistedIngredients: [Ingredient]
-    @Binding var notSureIngredients: [Ingredient]
+    @Binding var whitelistedIngredients: [String]
+    @Binding var blacklistedIngredients: [String]
+    @Binding var notSureIngredients: [String]
     @Binding var unclassifiedIngredients: [String]
     
     var body: some View {
@@ -173,9 +173,9 @@ struct IngredientsListView: View {
                             .padding(.horizontal)
                         
                         LazyVStack(spacing: 0) {
-                            ForEach(blacklistedIngredients) { ingredient in
+                            ForEach(blacklistedIngredients, id: \.self) { ingredient in
                                 HStack {
-                                    Text(ingredient.name)
+                                    Text(ingredient)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .multilineTextAlignment(.leading)
                                         .font(.body)
@@ -194,14 +194,14 @@ struct IngredientsListView: View {
                             }
                         }
                         .background(Color.black.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: 16))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
                     .padding(.horizontal)
                 }
                 
                 if !notSureIngredients.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Ambigious ingredients")
+                        Text("Ambiguous ingredients")
                             .textCase(.uppercase)
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -210,7 +210,7 @@ struct IngredientsListView: View {
                         LazyVStack(spacing: 0) {
                             ForEach(notSureIngredients, id: \.self) { ingredient in
                                 HStack {
-                                    Text(ingredient.name)
+                                    Text(ingredient)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .multilineTextAlignment(.leading)
                                         .font(.body)
@@ -229,7 +229,7 @@ struct IngredientsListView: View {
                             }
                         }
                         .background(Color.black.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: 16))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
                     .padding(.horizontal)
                 }
@@ -273,8 +273,8 @@ struct IngredientsListView: View {
                             .padding(.horizontal)
                         
                         LazyVStack(spacing: 0) {
-                            ForEach(whitelistedIngredients) { ingredient in
-                                Text(ingredient.name)
+                            ForEach(whitelistedIngredients, id: \.self) { ingredient in
+                                Text(ingredient)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .multilineTextAlignment(.leading)
                                     .padding()
@@ -288,7 +288,7 @@ struct IngredientsListView: View {
                             }
                         }
                         .background(Color.black.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: 16))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                     }
                     .padding(.horizontal)
                 }

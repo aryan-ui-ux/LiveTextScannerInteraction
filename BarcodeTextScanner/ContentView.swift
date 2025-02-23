@@ -143,14 +143,15 @@ struct ContentView: View {
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
         
+        let lowercasedParagraphs = paragraphs.map { $0.lowercased() }
         
-        if let index = paragraphs.firstIndex(where: { $0.localizedCaseInsensitiveContains("ingredient") }) {
+        if let index = lowercasedParagraphs.firstIndex(where: { $0.contains("ingredient") }) {
             paragraphs.removeFirst(index)
-            // We need to add common next section words becasue "." can also be used for numeric value. This is more deterministic.
-            if let endIndex = paragraphs.firstIndex(where: { $0.contains("Nutritional") || $0.contains("Distributed") || $0.contains("EXPIRY")
+            // We need to add common next section words because "." can also be used for numeric value. This is more deterministic.
+            if let endIndex = lowercasedParagraphs.firstIndex(where: { $0.contains("nutritional") || $0.contains("distributed") || $0.contains("expiry")
             })  {
                     paragraphs = Array(paragraphs.prefix(endIndex + 1))
-            } else if let postEndIndex = paragraphs.firstIndex(where: { !$0.contains(",") }) {
+            } else if let postEndIndex = lowercasedParagraphs.firstIndex(where: { !$0.contains(",") }) {
                 // Edge case: If it can't find any next section starting words use all the words.
                 if postEndIndex != 0 {
                     paragraphs = Array(paragraphs.prefix(postEndIndex))
@@ -158,6 +159,7 @@ struct ContentView: View {
             }
         }
 
+        print(paragraphs)
         
         let ingredients = paragraphs
             .joined(separator: " ")
@@ -169,6 +171,8 @@ struct ContentView: View {
                     .trimmingCharacters(in: .punctuationCharacters)
             }
             .filter { !$0.isEmpty }
+
+        print("ingredients: ", ingredients)
         
         self.result = .init(ingredients: ingredients)
     }

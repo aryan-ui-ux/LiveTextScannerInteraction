@@ -19,16 +19,16 @@ enum IngredientType: String, Codable {
 struct Ingredient: Codable, Identifiable, Hashable {
     let id: Int
     let name: String
-    let nameScientific: String?
-    let description: String?
-    let itisId: String?
-    let wikipediaId: String?
+    // let nameScientific: String?
+    // let description: String?
+    // let itisId: String?
+    // let wikipediaId: String?
     let foodGroup: String?
-    let foodSubgroup: String?
-    let foodType: String?
-    let category: String?
-    let ncbiTaxonomyId: Int?
-    let publicId: String?
+    // let foodSubgroup: String?
+    // let foodType: String?
+    // let category: String?
+    // let ncbiTaxonomyId: Int?
+    // let publicId: String?
     var ingredientType: IngredientType?
 }
 
@@ -69,51 +69,98 @@ class IngredientStore {
         from items: [String],
         for preference: Preference
     ) -> (
-        whitelisted: [Ingredient],
-        blacklisted: [Ingredient],
-        notSure: [Ingredient],
+        whitelisted: [String],
+        blacklisted: [String],
+        notSure: [String],
         unclassified: [String]
     ) {
-        
         var addedIds: [Int] = []
-        var addedItems: [String] = []
-        var whitelisted: [Ingredient] = []
-        var blacklisted: [Ingredient] = []
-        var notSure: [Ingredient] = []
+        var whitelisted: [String] = []
+        var blacklisted: [String] = []
+        var notSure: [String] = []
         var unclassified: [String] = []
-        
+
         func didFindAndAddIngredient(for text: String) -> Bool {
             let lowercasedItem = text.lowercased()
-            if let index = map[lowercasedItem] ?? map[singularizeWord(lowercasedItem)] {
+            var found = false
+            
+            // Try exact match first
+            if let index = map[lowercasedItem] {
                 let ingredient = ingredients[index]
                 if !addedIds.contains(ingredient.id) {
                     addedIds.append(ingredient.id)
                     let foodGroup = ingredient.foodGroup ?? ""
-                    if preference.unsureIngredients.contains(foodGroup) {
-                        notSure.append(ingredient)
-                    } else if preference.blacklistedIngredientGroups.contains(foodGroup) {
-                        blacklisted.append(ingredient)
+                    if preference.blacklistedIngredientGroups.contains(foodGroup) {
+                        blacklisted.append(text)
+                    } else if preference.unsureIngredients.contains(foodGroup) {
+                        notSure.append(text)
                     } else {
-                        whitelisted.append(ingredient)
+                        whitelisted.append(text)
                     }
                 }
                 return true
             }
-            return false
-        }
-        
-        items.forEach { item in
-            if !didFindAndAddIngredient(for: item) {
-                item.split(separator: " ")
-                    .forEach { substring in
-                        let substring = String(substring)
-                        if !didFindAndAddIngredient(for: substring), !addedItems.contains(substring) {
-                            addedItems.append(substring)
-                            unclassified.append(substring)
+            
+            // Fuzzy search
+            var lastFoundIngredient: Ingredient?
+            var isBlacklistedFound = false
+            var isNotSureFound = false
+            
+            for ingredient in ingredients {
+                let ingredientWords = ingredient.name.localizedLowercase.split(separator: " ")
+                let searchWords = lowercasedItem.split(separator: " ")
+                
+                for searchWord in searchWords {
+                    if searchWord == "evaporated" || searchWord == "sea" || searchWord == "flakes" || searchWord=="oil"  || searchWord == "sugar" || searchWord == "powder" || searchWord == "white" || searchWord == "natural" || searchWord == "and" || searchWord == "acid" || searchWord == "wine"  ||  searchWord == "mix" || searchWord == "seeds" || searchWord == "seed" || searchWord == "juice"  || searchWord == "sauce" {
+                        continue
+                    }
+                    
+                    if ingredientWords.contains(where: { $0 == searchWord }) {
+                        found = true
+                        let foodGroup = ingredient.foodGroup ?? ""
+                        
+                        if preference.blacklistedIngredientGroups.contains(foodGroup) {
+                            isBlacklistedFound = true
+                            lastFoundIngredient = ingredient
+                            break
+                        } else if preference.unsureIngredients.contains(foodGroup) {
+                            isNotSureFound = true
+                            lastFoundIngredient = ingredient
+                            break
+                        } else {
+                            lastFoundIngredient = ingredient
                         }
                     }
+                }
+                
+                if isBlacklistedFound || isNotSureFound {
+                    break
+                }
+            }
+            
+            // Add the final result to appropriate list
+            if let ingredient = lastFoundIngredient, !addedIds.contains(ingredient.id) {
+                addedIds.append(ingredient.id)
+                let foodGroup = ingredient.foodGroup ?? ""
+                
+                if isBlacklistedFound {
+                    blacklisted.append(text)
+                } else if isNotSureFound {
+                    notSure.append(text)
+                } else {
+                    whitelisted.append(text)
+                }
+            }
+            
+            return found
+        }
+
+        items.forEach { item in
+            if !didFindAndAddIngredient(for: item) {
+                unclassified.append(item)
             }
         }
+
         
         return (whitelisted, blacklisted, notSure, unclassified)
     }
