@@ -90,13 +90,14 @@ struct SafeView: View {
                                         .fontDesign(.rounded)
                                         .foregroundStyle(.secondary)
                                         .padding(.horizontal, 20)
+                                        .lineLimit(2)
                                 }
                                 }
                                 .font(.largeTitle)
                                 .fontWeight(.semibold)
                                 .fontDesign(.rounded)
                                 .multilineTextAlignment(.center)
-                                .offset(y: blacklistedIngredients.isEmpty ? 160 : 220)
+                                .offset(y: blacklistedIngredients.isEmpty ? 180 : 220)
                             }
                         }
                     }
@@ -190,7 +191,7 @@ struct IngredientsListView: View {
                         LazyVStack(spacing: 0) {
                             ForEach(blacklistedIngredients, id: \.self) { ingredient in
                                 HStack {
-                                    Text(ingredient)
+                                    Text(ingredient.capitalized)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .multilineTextAlignment(.leading)
                                         .font(.body)
@@ -225,7 +226,7 @@ struct IngredientsListView: View {
                         LazyVStack(spacing: 0) {
                             ForEach(notSureIngredients, id: \.self) { ingredient in
                                 HStack {
-                                    Text(ingredient)
+                                    Text(ingredient.capitalized)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .multilineTextAlignment(.leading)
                                         .font(.body)
@@ -289,7 +290,7 @@ struct IngredientsListView: View {
                         
                         LazyVStack(spacing: 0) {
                             ForEach(whitelistedIngredients, id: \.self) { ingredient in
-                                Text(ingredient)
+                                Text(ingredient.capitalized)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .multilineTextAlignment(.leading)
                                     .padding()

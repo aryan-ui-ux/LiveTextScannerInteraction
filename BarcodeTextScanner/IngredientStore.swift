@@ -39,27 +39,16 @@ class IngredientStore {
     private var ingredients: [Ingredient] = []
     
     // Add this property to store common words to skip
-    private let commonWordsToSkip: Set<String> = [
-        "evaporated",
-        "sea",
-        "flakes",
-        "oil",
-        "sugar",
-        "powder",
-        "white",
-        "natural",
-        "and",
-        "acid",
-        "wine",
-        "mix",
-        "seeds",
-        "seed",
-        "juice",
-        "sauce",
-        "product",
-        "dried",
-        "lecithin"
-    ]
+
+    let commonWordsToSkip: Set<String> = [
+    "crushed", "ground", "roasted", "toasted", "refined", "raw", "fresh", "organic", "pure", "unrefined", "whole", "dehydrated", "filtered", "homogenized", "pasteurized",
+    "extract", "concentrate", "syrup", "flour", "starch", "gel", "crystals", "emulsifier", "hydrolyzed", "enriched", "fortified", "maltodextrin", "modified", "isolate",
+    "food", "ingredient", "substance", "blend", "formula", "mix", "compound", "elements", "contents", "portions", "preparation",
+    "water", "alcohol", "vinegar", "milk", "broth", "stock", "essence", "infusion", "distillate",
+    "lecithin", "antioxidant", "citric", "sorbate", "benzoate", "nitrate", "nitrite", "sulfite", "glutamate", "phosphate", "carbonate", "xanthan", "guar", "carrageenan",
+    "flavor", "aroma", "sweetener", "artificial", "natural", "seasoning", "enhancer", "glucose", "fructose", "sucrose", "dextrose", "corn syrup", "cane",
+    "powder", "flakes", "oil", "sugar", "white", "natural", "and", "acid", "wine", "mix", "seeds", "seed", "juice", "sauce", "product", "dried", "essence", "gum", "fiber", "coloring"
+]
     
     init() {
         setup()

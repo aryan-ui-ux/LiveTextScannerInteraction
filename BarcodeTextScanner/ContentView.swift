@@ -147,6 +147,14 @@ struct ContentView: View {
         
         if let index = lowercasedParagraphs.firstIndex(where: { $0.contains("ingredient") }) {
             paragraphs.removeFirst(index)
+            // Remove "ingredients:" or "ingredient:" from the first paragraph
+            if !paragraphs.isEmpty {
+                paragraphs[0] = paragraphs[0]
+                    .replacingOccurrences(of: "Ingredients:", with: "", options: .caseInsensitive)
+                    .replacingOccurrences(of: "Ingredient:", with: "", options: .caseInsensitive)
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            
             // We need to add common next section words because "." can also be used for numeric value. This is more deterministic.
             if let endIndex = lowercasedParagraphs.firstIndex(where: { $0.contains("nutritional") || $0.contains("distributed") || $0.contains("expiry")
             })  {
