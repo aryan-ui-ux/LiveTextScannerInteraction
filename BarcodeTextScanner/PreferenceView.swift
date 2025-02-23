@@ -10,7 +10,7 @@ import SwiftUI
 enum Preference: String, CaseIterable {
     case vegan
     case vegetarian
-    case pescatorian
+    case pescatarian
     case eggetarian
     
     var title: String {
@@ -19,8 +19,8 @@ enum Preference: String, CaseIterable {
                 return "Vegan"
             case .vegetarian:
                 return "Vegetarian"
-            case .pescatorian:
-                return "Pescatorian"
+            case .pescatarian:
+                return "Pescatarian"
             case .eggetarian:
                 return "Eggetarian"
         }
@@ -33,8 +33,8 @@ enum Preference: String, CaseIterable {
                 return ["Milk and milk products", "Animal foods", "Aquatic foods", "Eggs"]
             case .vegetarian:
                 return ["Animal foods", "Aquatic foods", "Eggs"]
-            case .pescatorian:
-                return ["Animal foods"]
+            case .pescatarian:
+                return ["Animal foods", "Eggs"]
             case .eggetarian:
                 return ["Animal foods", "Aquatic foods"]
         }
