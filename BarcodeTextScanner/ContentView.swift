@@ -104,7 +104,7 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
                 
                 TabView(selection: $selectedIndex) {
-                    ForEach(1...5, id: \.self) { id in
+                    ForEach(1...2, id: \.self) { id in
                         Rectangle()
                             .foregroundStyle(.clear)
                             .overlay(alignment: .top) {
