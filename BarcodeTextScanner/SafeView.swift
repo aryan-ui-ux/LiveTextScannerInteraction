@@ -18,6 +18,7 @@ struct SafeView: View {
     }
     
     @Environment(\.dismiss) var dismiss
+    let impactGenerator = UIImpactFeedbackGenerator(style: .light)
     let preference: Preference
     @State var whitelistedIngredients: [String] = []
     @State var blacklistedIngredients: [String] = []
@@ -106,6 +107,8 @@ struct SafeView: View {
                         switch state {
                             case .safe, .unsafe:
                                 Button {
+                                    impactGenerator.prepare()
+                                    impactGenerator.impactOccurred()
                                     showDetailView = true
                                 } label: {
                                     Circle()
@@ -126,6 +129,8 @@ struct SafeView: View {
                         }
                         
                         Button {
+                            impactGenerator.prepare()
+                            impactGenerator.impactOccurred()
                             dismiss()
                         } label: {
                             Text("Scan again")

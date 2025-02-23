@@ -17,6 +17,7 @@ struct ContentView: View {
         let ingredients: [String]
     }
     
+    let impactGenerator = UIImpactFeedbackGenerator(style: .light)
     @EnvironmentObject var vm: AppScannerViewModel
     @State var extractedText: String = ""
     @State var result: ScanResult? = nil
@@ -35,6 +36,8 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
+                    impactGenerator.prepare()
+                    impactGenerator.impactOccurred()
                     vm.capturePhoto = true
                 } label: {
                     ZStack {

@@ -52,6 +52,7 @@ enum Preference: String, CaseIterable {
     
 struct PreferenceView: View {
     
+    let impactGenerator = UIImpactFeedbackGenerator(style: .light)
     @State var selectedPreference: Preference? = nil
     @AppStorage("preference") var preference: String?
     
@@ -105,6 +106,8 @@ struct PreferenceView: View {
                 Spacer()
                 
                 Button {
+                    impactGenerator.prepare()
+                    impactGenerator.impactOccurred()
                     withAnimation {
                         preference = selectedPreference?.rawValue
                     }
