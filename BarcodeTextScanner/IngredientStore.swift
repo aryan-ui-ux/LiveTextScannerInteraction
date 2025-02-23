@@ -38,6 +38,29 @@ class IngredientStore {
     private var map: [String: Int] = [:]
     private var ingredients: [Ingredient] = []
     
+    // Add this property to store common words to skip
+    private let commonWordsToSkip: Set<String> = [
+        "evaporated",
+        "sea",
+        "flakes",
+        "oil",
+        "sugar",
+        "powder",
+        "white",
+        "natural",
+        "and",
+        "acid",
+        "wine",
+        "mix",
+        "seeds",
+        "seed",
+        "juice",
+        "sauce",
+        "product",
+        "dried",
+        "lecithin"
+    ]
+    
     init() {
         setup()
     }
@@ -111,7 +134,7 @@ class IngredientStore {
                 let searchWords = lowercasedItem.split(separator: " ")
                 
                 for searchWord in searchWords {
-                    if searchWord == "evaporated" || searchWord == "sea" || searchWord == "flakes" || searchWord=="oil"  || searchWord == "sugar" || searchWord == "powder" || searchWord == "white" || searchWord == "natural" || searchWord == "and" || searchWord == "acid" || searchWord == "wine"  ||  searchWord == "mix" || searchWord == "seeds" || searchWord == "seed" || searchWord == "juice"  || searchWord == "sauce" {
+                    if commonWordsToSkip.contains(String(searchWord)) {
                         continue
                     }
                     
