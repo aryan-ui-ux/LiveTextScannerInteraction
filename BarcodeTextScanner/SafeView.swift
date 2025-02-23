@@ -118,6 +118,9 @@ struct SafeView: View {
                                                 .foregroundStyle(.white)
                                         }
                                 }
+                                .accessibilityLabel("View ingredients")
+                                .accessibilityHint("Double tap to view all ingredients the app detected")
+                                .accessibilityAddTraits(.isButton)
                             case .notSure:
                                 EmptyView()
                         }

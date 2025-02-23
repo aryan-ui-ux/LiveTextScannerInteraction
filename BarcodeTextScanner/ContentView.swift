@@ -48,6 +48,9 @@ struct ContentView: View {
                     }
                     .frame(width: 70, height: 70)
                 }
+                .accessibilityLabel("Click image")
+                .accessibilityHint("Double tap to click image to scan for ingredients")
+                .accessibilityAddTraits(.isButton)
                 .padding(.vertical, 36)
                 
                 Spacer()
@@ -81,6 +84,9 @@ struct ContentView: View {
                             .rotationEffect(.degrees(6.5))
                             .frame(width: 44, height: 58)
                     }
+                    .accessibilityLabel("Demo images")
+                    .accessibilityHint("Double tap to go into a gallery for demo images")
+                    .accessibilityAddTraits(.isButton)
                     .padding(.horizontal)
                 }
             }
@@ -131,6 +137,7 @@ struct ContentView: View {
                             .clipShape(.rect(cornerRadius: 24))
                             .padding(.bottom, 36)
                             .tag(id)
+                            .accessibilityLabel("Sample demo image \(id)")
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .always))
@@ -148,9 +155,16 @@ struct ContentView: View {
                         .background(Color.white)
                         .clipShape(Capsule())
                 }
+                .accessibilityLabel("Select")
+                .accessibilityHint("Double tap to go select image as your demo image for testing")
+                .accessibilityAddTraits(.isButton)
                 .padding(.horizontal)
             }
             .environment(\.colorScheme, .dark)
+        }
+        .background {
+            Color(uiColor: UIColor.systemBackground)
+                .ignoresSafeArea()
         }
     }
     

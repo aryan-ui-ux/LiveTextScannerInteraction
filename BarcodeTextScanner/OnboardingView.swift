@@ -15,6 +15,7 @@ struct OnboardingView: View {
                     LoopingVideoView()
                         .aspectRatio(18/29, contentMode: .fit)
                         .cornerRadius(24)
+                        .accessibilityLabel("A looping animated video showing how to use the app.")
                     
                     Spacer()
                     
@@ -36,6 +37,9 @@ struct OnboardingView: View {
                             .background(Color(.label))
                             .clipShape(Capsule())
                     }
+                    .accessibilityLabel("Next")
+                    .accessibilityHint("Double tap to go to the next screen to select your dietary preference")
+                    .accessibilityAddTraits(.isButton)
                 }
                 .padding()
             }

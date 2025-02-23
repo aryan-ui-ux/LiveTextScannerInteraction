@@ -73,42 +73,33 @@ struct PreferenceView: View {
                             selectedPreference = preference
                         }
                     } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Spacer()
-                                Text(preference.title)
-                                    .font(.headline)
-                                    .foregroundStyle(preference == selectedPreference ? .safeGreen : .white)
-                                Spacer()
-                                
-                                Group {
-                                    if preference == selectedPreference {
-                                        Image(systemName: "checkmark")
-                                            .font(.headline)
-                                            .foregroundColor(Color.safeGreen)
-                                    } else {
-                                        Image(systemName: "checkmark")
-                                            .font(.headline)
-                                            .foregroundColor(.clear)
-                                    }
+                        Text(preference.title)
+                            .font(.headline)
+                            .foregroundStyle(preference == selectedPreference ? .safeGreen : .white)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 20)
+                            .overlay(alignment: .trailing) {
+                                if preference == selectedPreference {
+                                    Image(systemName: "checkmark")
+                                        .font(.headline)
+                                        .foregroundColor(Color.safeGreen)
+                                        .frame(width: 20)
                                 }
-                                .frame(width: 20)
                             }
-                            
-                        }
-                        .padding(.vertical, 20)
-                        .padding(.horizontal, 20)
-                        .frame(maxWidth: .infinity)
-                        .background {
-                            if preference == selectedPreference {
-                                Color.white
-                            } else {
-                                Color.black.opacity(0.1)
+                            .padding(.horizontal, 20)
+                            .background {
+                                if preference == selectedPreference {
+                                    Color.white
+                                } else {
+                                    Color.black.opacity(0.1)
+                                }
                             }
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                            .clipShape(RoundedRectangle(cornerRadius: 24))
                     }
                     .padding(.bottom, 8)
+                    .accessibilityLabel(preference.title)
+                    .accessibilityHint("Double tap to go set \(preference.title) as your dietary restriction")
+                    .accessibilityAddTraits(.isButton)
                 }
                 
                 Spacer()
@@ -128,6 +119,10 @@ struct PreferenceView: View {
                         .clipShape(Capsule())
                 }
                 .disabled(selectedPreference == nil)
+                .opacity(selectedPreference == nil ? 0.5 : 1)
+                .accessibilityLabel("Get started", isEnabled: selectedPreference != nil)
+                .accessibilityHint("Double tap to go to the home screen of the app")
+                .accessibilityAddTraits(.isButton)
             }
             .padding()
         }
